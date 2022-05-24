@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2481403A283C9365007E8381 /* Server_RackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814039283C9365007E8381 /* Server_RackApp.swift */; };
-		2481403C283C9365007E8381 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481403B283C9365007E8381 /* ContentView.swift */; };
 		2481403E283C9367007E8381 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2481403D283C9367007E8381 /* Assets.xcassets */; };
 		24814041283C9367007E8381 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24814040283C9367007E8381 /* Preview Assets.xcassets */; };
 		24814043283C9367007E8381 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814042283C9367007E8381 /* Persistence.swift */; };
@@ -16,6 +15,17 @@
 		24814050283C9367007E8381 /* Server_RackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481404F283C9367007E8381 /* Server_RackTests.swift */; };
 		2481405A283C9367007E8381 /* Server_RackUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814059283C9367007E8381 /* Server_RackUITests.swift */; };
 		2481405C283C9367007E8381 /* Server_RackUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481405B283C9367007E8381 /* Server_RackUITestsLaunchTests.swift */; };
+		2481406A283C93F8007E8381 /* Citadel in Frameworks */ = {isa = PBXBuildFile; productRef = 24814069283C93F8007E8381 /* Citadel */; };
+		2481406E283C942B007E8381 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481406D283C942B007E8381 /* StatusView.swift */; };
+		24814074283C9F4F007E8381 /* SSHConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814073283C9F4F007E8381 /* SSHConnection.swift */; };
+		2481407B283CA264007E8381 /* Server+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814079283CA264007E8381 /* Server+CoreDataClass.swift */; };
+		2481407C283CA264007E8381 /* Server+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481407A283CA264007E8381 /* Server+CoreDataProperties.swift */; };
+		2481407E283CA508007E8381 /* ServerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481407D283CA508007E8381 /* ServerView.swift */; };
+		24814081283CA8E3007E8381 /* ServerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814080283CA8E3007E8381 /* ServerStorage.swift */; };
+		24814083283D283E007E8381 /* ServerCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814082283D283E007E8381 /* ServerCreateView.swift */; };
+		24814085283D2AF7007E8381 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814084283D2AF7007E8381 /* MainTabView.swift */; };
+		24814088283D3FC2007E8381 /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = 24814087283D3FC2007E8381 /* RNCryptor */; };
+		2481408B283D3FF8007E8381 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 2481408A283D3FF8007E8381 /* KeychainAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +48,6 @@
 /* Begin PBXFileReference section */
 		24814036283C9365007E8381 /* Server Rack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Server Rack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		24814039283C9365007E8381 /* Server_RackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server_RackApp.swift; sourceTree = "<group>"; };
-		2481403B283C9365007E8381 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2481403D283C9367007E8381 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		24814040283C9367007E8381 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		24814042283C9367007E8381 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -48,6 +57,15 @@
 		24814055283C9367007E8381 /* Server RackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Server RackUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		24814059283C9367007E8381 /* Server_RackUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server_RackUITests.swift; sourceTree = "<group>"; };
 		2481405B283C9367007E8381 /* Server_RackUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server_RackUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		2481406D283C942B007E8381 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
+		2481406F283C9793007E8381 /* Server-Rack-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Server-Rack-Info.plist"; sourceTree = SOURCE_ROOT; };
+		24814073283C9F4F007E8381 /* SSHConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHConnection.swift; sourceTree = "<group>"; };
+		24814079283CA264007E8381 /* Server+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataClass.swift"; sourceTree = "<group>"; };
+		2481407A283CA264007E8381 /* Server+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		2481407D283CA508007E8381 /* ServerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerView.swift; sourceTree = "<group>"; };
+		24814080283CA8E3007E8381 /* ServerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStorage.swift; sourceTree = "<group>"; };
+		24814082283D283E007E8381 /* ServerCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCreateView.swift; sourceTree = "<group>"; };
+		24814084283D2AF7007E8381 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +73,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24814088283D3FC2007E8381 /* RNCryptor in Frameworks */,
+				2481406A283C93F8007E8381 /* Citadel in Frameworks */,
+				2481408B283D3FF8007E8381 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,11 +119,16 @@
 		24814038283C9365007E8381 /* Server Rack */ = {
 			isa = PBXGroup;
 			children = (
-				24814039283C9365007E8381 /* Server_RackApp.swift */,
-				2481403B283C9365007E8381 /* ContentView.swift */,
+				2481407F283CA8BF007E8381 /* Storage */,
+				24814075283CA042007E8381 /* Entity */,
+				24814071283C9D26007E8381 /* Model */,
+				24814070283C9CE9007E8381 /* View */,
+				24814072283C9D7D007E8381 /* ViewModel */,
 				2481403D283C9367007E8381 /* Assets.xcassets */,
+				24814039283C9365007E8381 /* Server_RackApp.swift */,
 				24814042283C9367007E8381 /* Persistence.swift */,
 				24814044283C9367007E8381 /* Server_Rack.xcdatamodeld */,
+				2481406F283C9793007E8381 /* Server-Rack-Info.plist */,
 				2481403F283C9367007E8381 /* Preview Content */,
 			);
 			path = "Server Rack";
@@ -133,6 +159,57 @@
 			path = "Server RackUITests";
 			sourceTree = "<group>";
 		};
+		24814070283C9CE9007E8381 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2481406D283C942B007E8381 /* StatusView.swift */,
+				2481407D283CA508007E8381 /* ServerView.swift */,
+				24814082283D283E007E8381 /* ServerCreateView.swift */,
+				24814084283D2AF7007E8381 /* MainTabView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		24814071283C9D26007E8381 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				24814073283C9F4F007E8381 /* SSHConnection.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		24814072283C9D7D007E8381 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		24814075283CA042007E8381 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				24814078283CA249007E8381 /* Server */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		24814078283CA249007E8381 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				24814079283CA264007E8381 /* Server+CoreDataClass.swift */,
+				2481407A283CA264007E8381 /* Server+CoreDataProperties.swift */,
+			);
+			path = Server;
+			sourceTree = "<group>";
+		};
+		2481407F283CA8BF007E8381 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				24814080283CA8E3007E8381 /* ServerStorage.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -149,6 +226,11 @@
 			dependencies = (
 			);
 			name = "Server Rack";
+			packageProductDependencies = (
+				24814069283C93F8007E8381 /* Citadel */,
+				24814087283D3FC2007E8381 /* RNCryptor */,
+				2481408A283D3FF8007E8381 /* KeychainAccess */,
+			);
 			productName = "Server Rack";
 			productReference = 24814036283C9365007E8381 /* Server Rack.app */;
 			productType = "com.apple.product-type.application";
@@ -221,6 +303,11 @@
 				Base,
 			);
 			mainGroup = 2481402D283C9365007E8381;
+			packageReferences = (
+				24814068283C93F8007E8381 /* XCRemoteSwiftPackageReference "Citadel" */,
+				24814086283D3FC2007E8381 /* XCRemoteSwiftPackageReference "RNCryptor" */,
+				24814089283D3FF7007E8381 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+			);
 			productRefGroup = 24814037283C9365007E8381 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -263,10 +350,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2481407B283CA264007E8381 /* Server+CoreDataClass.swift in Sources */,
+				24814083283D283E007E8381 /* ServerCreateView.swift in Sources */,
+				2481407E283CA508007E8381 /* ServerView.swift in Sources */,
 				24814043283C9367007E8381 /* Persistence.swift in Sources */,
-				2481403C283C9365007E8381 /* ContentView.swift in Sources */,
+				24814081283CA8E3007E8381 /* ServerStorage.swift in Sources */,
+				24814085283D2AF7007E8381 /* MainTabView.swift in Sources */,
 				2481403A283C9365007E8381 /* Server_RackApp.swift in Sources */,
 				24814046283C9367007E8381 /* Server_Rack.xcdatamodeld in Sources */,
+				2481407C283CA264007E8381 /* Server+CoreDataProperties.swift in Sources */,
+				2481406E283C942B007E8381 /* StatusView.swift in Sources */,
+				24814074283C9F4F007E8381 /* SSHConnection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +522,7 @@
 				DEVELOPMENT_TEAM = MBQ2JLQD83;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Server-Rack-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -457,6 +552,7 @@
 				DEVELOPMENT_TEAM = MBQ2JLQD83;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Server-Rack-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -591,6 +687,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		24814068283C93F8007E8381 /* XCRemoteSwiftPackageReference "Citadel" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Joannis/Citadel.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		24814086283D3FC2007E8381 /* XCRemoteSwiftPackageReference "RNCryptor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RNCryptor/RNCryptor.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		24814089283D3FF7007E8381 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		24814069283C93F8007E8381 /* Citadel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 24814068283C93F8007E8381 /* XCRemoteSwiftPackageReference "Citadel" */;
+			productName = Citadel;
+		};
+		24814087283D3FC2007E8381 /* RNCryptor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 24814086283D3FC2007E8381 /* XCRemoteSwiftPackageReference "RNCryptor" */;
+			productName = RNCryptor;
+		};
+		2481408A283D3FF8007E8381 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 24814089283D3FF7007E8381 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		24814044283C9367007E8381 /* Server_Rack.xcdatamodeld */ = {

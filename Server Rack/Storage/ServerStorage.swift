@@ -23,7 +23,10 @@ class ServerStorage: NSObject {
         
         let fetchRequest = Server.fetchRequest()
         
-        fetchRequest.sortDescriptors = []
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "order", ascending: true),
+            NSSortDescriptor(key: "name", ascending: true),
+        ]
         
         serverFetchController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         

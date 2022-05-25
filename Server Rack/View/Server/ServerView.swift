@@ -34,6 +34,35 @@ class ServerViewModel: ObservableObject {
         .store(in: &cancellableSet)
     }
     
+    func deleteServer(_ offSet: IndexSet) {
+        for index in offSet {
+            let server = servers[index]
+            servers.remove(at: index)
+            context.delete(server)
+        }
+        
+        do {
+            try context.save()
+        } catch {
+            print(error)
+        }
+    }
+    
+    func moveServer(_ offSet: IndexSet, _ destination: Int) {
+        var revisedServers = servers.map { $0 }
+        revisedServers.move(fromOffsets: offSet, toOffset: destination)
+        
+        for revisedIndex in stride(from: revisedServers.count - 1, through: 0, by: -1) {
+            revisedServers[revisedIndex].order = Int16(revisedIndex)
+        }
+        
+        do {
+            try context.save()
+        } catch {
+            print(error)
+        }
+    }
+    
 }
 
 struct ServerView: View {
@@ -57,7 +86,13 @@ struct ServerView: View {
                         ServerViewItem(server: server)
                     }
                     .onDelete { indexSet in
-                        print(indexSet)
+                        vm.deleteServer(indexSet)
+                    }
+                    .onMove { offSet, destination in
+                        vm.moveServer(offSet, destination)
+                    }
+                    .onDrag {
+                        NSItemProvider()
                     }
                 }
             }

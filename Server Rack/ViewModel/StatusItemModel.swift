@@ -17,7 +17,7 @@ class StatusItemModel: SSHConnection, ObservableObject {
     
     @Published var temperature = ""
     
-    @Published var cpuLoad:[CGFloat] = [0.01,0.01,0.01]
+    @Published var cpuLoad: [CGFloat] = [0.01,0.01,0.01]
     
     @Published var cpuIdle: CGFloat = 99.9
     
@@ -27,7 +27,12 @@ class StatusItemModel: SSHConnection, ObservableObject {
     
     init(server: Server) {
         super.init(server)
-        attachTimer()
+    }
+    
+    deinit {
+        timer?.invalidate()
+        
+        print("Deinit - StatusItemModel")
     }
     
     fileprivate func fetchTemp() async throws {
@@ -110,13 +115,19 @@ class StatusItemModel: SSHConnection, ObservableObject {
     }
     
     override func connect() async throws {
-        try await super.connect()
-        attachTimer()
+        if client == nil {
+            try await super.connect()
+            DispatchQueue.main.async {
+                self.attachTimer()
+            }
+        }
     }
     
     override func disconnect() async throws {
         try await super.disconnect()
-        dettachTimer()
+        DispatchQueue.main.async {
+            self.dettachTimer()
+        }
     }
     
     func attachTimer() {

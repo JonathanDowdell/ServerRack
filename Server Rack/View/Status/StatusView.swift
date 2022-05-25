@@ -33,6 +33,35 @@ class StatusViewModel: ObservableObject {
         .store(in: &cancellableSet)
     }
     
+    func deleteServer(_ offSet: IndexSet) {
+        for index in offSet {
+            let server = servers[index]
+            servers.remove(at: index)
+            context.delete(server)
+        }
+        
+        do {
+            try context.save()
+        } catch {
+            print(error)
+        }
+    }
+    
+    func moveServer(_ offSet: IndexSet, _ destination: Int) {
+        var revisedServers = servers.map { $0 }
+        revisedServers.move(fromOffsets: offSet, toOffset: destination)
+        
+        for revisedIndex in stride(from: revisedServers.count - 1, through: 0, by: -1) {
+            revisedServers[revisedIndex].order = Int16(revisedIndex)
+        }
+        
+        do {
+            try context.save()
+        } catch {
+            print(error)
+        }
+    }
+    
 }
 
 struct StatusView: View {
@@ -47,11 +76,10 @@ struct StatusView: View {
                         StatusItem(vm: .init(server: server))
                     }
                     .onDelete { indexSet in
-                        print(indexSet)
+                        vm.deleteServer(indexSet)
                     }
                     .onMove { indexSet, index in
-                        print(indexSet)
-                        print(index)
+                        vm.moveServer(indexSet, index)
                     }
                     .onDrag {
                         NSItemProvider()

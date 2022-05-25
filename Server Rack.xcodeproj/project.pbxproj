@@ -26,6 +26,18 @@
 		24814085283D2AF7007E8381 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814084283D2AF7007E8381 /* MainTabView.swift */; };
 		24814088283D3FC2007E8381 /* RNCryptor in Frameworks */ = {isa = PBXBuildFile; productRef = 24814087283D3FC2007E8381 /* RNCryptor */; };
 		2481408B283D3FF8007E8381 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 2481408A283D3FF8007E8381 /* KeychainAccess */; };
+		24814092283D4322007E8381 /* SecurityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814091283D4322007E8381 /* SecurityManager.swift */; };
+		24814094283D538A007E8381 /* ServerViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814093283D538A007E8381 /* ServerViewItem.swift */; };
+		24814098283D5C98007E8381 /* StatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814097283D5C98007E8381 /* StatusItem.swift */; };
+		24F46853283D6FF200C7D876 /* StatusItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46852283D6FF200C7D876 /* StatusItemModel.swift */; };
+		24F46856283D9A0400C7D876 /* String+etx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46855283D9A0400C7D876 /* String+etx.swift */; };
+		24F46858283DB81000C7D876 /* TemperatureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46857283DB81000C7D876 /* TemperatureType.swift */; };
+		24F4685B283DC0DB00C7D876 /* StatusItemRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4685A283DC0DB00C7D876 /* StatusItemRing.swift */; };
+		24F4685E283DD2B200C7D876 /* RingShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4685D283DD2B200C7D876 /* RingShape.swift */; };
+		24F46860283DD2D700C7D876 /* StatusRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4685F283DD2D700C7D876 /* StatusRing.swift */; };
+		24F46862283DD69B00C7D876 /* StatusMultiRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46861283DD69B00C7D876 /* StatusMultiRing.swift */; };
+		24F46864283DF4D800C7D876 /* Temp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46863283DF4D800C7D876 /* Temp.swift */; };
+		24F46866283E926800C7D876 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46865283E926800C7D876 /* FlipView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +78,18 @@
 		24814080283CA8E3007E8381 /* ServerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStorage.swift; sourceTree = "<group>"; };
 		24814082283D283E007E8381 /* ServerCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCreateView.swift; sourceTree = "<group>"; };
 		24814084283D2AF7007E8381 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		24814091283D4322007E8381 /* SecurityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityManager.swift; sourceTree = "<group>"; };
+		24814093283D538A007E8381 /* ServerViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerViewItem.swift; sourceTree = "<group>"; };
+		24814097283D5C98007E8381 /* StatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItem.swift; sourceTree = "<group>"; };
+		24F46852283D6FF200C7D876 /* StatusItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemModel.swift; sourceTree = "<group>"; };
+		24F46855283D9A0400C7D876 /* String+etx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+etx.swift"; sourceTree = "<group>"; };
+		24F46857283DB81000C7D876 /* TemperatureType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureType.swift; sourceTree = "<group>"; };
+		24F4685A283DC0DB00C7D876 /* StatusItemRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemRing.swift; sourceTree = "<group>"; };
+		24F4685D283DD2B200C7D876 /* RingShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingShape.swift; sourceTree = "<group>"; };
+		24F4685F283DD2D700C7D876 /* StatusRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusRing.swift; sourceTree = "<group>"; };
+		24F46861283DD69B00C7D876 /* StatusMultiRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMultiRing.swift; sourceTree = "<group>"; };
+		24F46863283DF4D800C7D876 /* Temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Temp.swift; sourceTree = "<group>"; };
+		24F46865283E926800C7D876 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +123,7 @@
 		2481402D283C9365007E8381 = {
 			isa = PBXGroup;
 			children = (
+				24F46863283DF4D800C7D876 /* Temp.swift */,
 				24814038283C9365007E8381 /* Server Rack */,
 				2481404E283C9367007E8381 /* Server RackTests */,
 				24814058283C9367007E8381 /* Server RackUITests */,
@@ -119,11 +144,14 @@
 		24814038283C9365007E8381 /* Server Rack */ = {
 			isa = PBXGroup;
 			children = (
+				24F46859283DB82900C7D876 /* SSH */,
+				2481408F283D42DB007E8381 /* Security */,
 				2481407F283CA8BF007E8381 /* Storage */,
 				24814075283CA042007E8381 /* Entity */,
 				24814071283C9D26007E8381 /* Model */,
 				24814070283C9CE9007E8381 /* View */,
 				24814072283C9D7D007E8381 /* ViewModel */,
+				24F46854283D99F600C7D876 /* Extension */,
 				2481403D283C9367007E8381 /* Assets.xcassets */,
 				24814039283C9365007E8381 /* Server_RackApp.swift */,
 				24814042283C9367007E8381 /* Persistence.swift */,
@@ -162,10 +190,10 @@
 		24814070283C9CE9007E8381 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2481406D283C942B007E8381 /* StatusView.swift */,
-				2481407D283CA508007E8381 /* ServerView.swift */,
-				24814082283D283E007E8381 /* ServerCreateView.swift */,
 				24814084283D2AF7007E8381 /* MainTabView.swift */,
+				24814096283D53E4007E8381 /* Status */,
+				24814095283D53AA007E8381 /* Server */,
+				24F4685C283DD2AA00C7D876 /* Misc */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -173,7 +201,7 @@
 		24814071283C9D26007E8381 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				24814073283C9F4F007E8381 /* SSHConnection.swift */,
+				24F46857283DB81000C7D876 /* TemperatureType.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -181,6 +209,7 @@
 		24814072283C9D7D007E8381 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				24F46852283D6FF200C7D876 /* StatusItemModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -208,6 +237,61 @@
 				24814080283CA8E3007E8381 /* ServerStorage.swift */,
 			);
 			path = Storage;
+			sourceTree = "<group>";
+		};
+		2481408F283D42DB007E8381 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				24814091283D4322007E8381 /* SecurityManager.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+		24814095283D53AA007E8381 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				2481407D283CA508007E8381 /* ServerView.swift */,
+				24814093283D538A007E8381 /* ServerViewItem.swift */,
+				24814082283D283E007E8381 /* ServerCreateView.swift */,
+			);
+			path = Server;
+			sourceTree = "<group>";
+		};
+		24814096283D53E4007E8381 /* Status */ = {
+			isa = PBXGroup;
+			children = (
+				2481406D283C942B007E8381 /* StatusView.swift */,
+				24814097283D5C98007E8381 /* StatusItem.swift */,
+				24F4685A283DC0DB00C7D876 /* StatusItemRing.swift */,
+			);
+			path = Status;
+			sourceTree = "<group>";
+		};
+		24F46854283D99F600C7D876 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				24F46855283D9A0400C7D876 /* String+etx.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		24F46859283DB82900C7D876 /* SSH */ = {
+			isa = PBXGroup;
+			children = (
+				24814073283C9F4F007E8381 /* SSHConnection.swift */,
+			);
+			path = SSH;
+			sourceTree = "<group>";
+		};
+		24F4685C283DD2AA00C7D876 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				24F4685D283DD2B200C7D876 /* RingShape.swift */,
+				24F4685F283DD2D700C7D876 /* StatusRing.swift */,
+				24F46861283DD69B00C7D876 /* StatusMultiRing.swift */,
+				24F46865283E926800C7D876 /* FlipView.swift */,
+			);
+			path = Misc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -350,17 +434,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24F46860283DD2D700C7D876 /* StatusRing.swift in Sources */,
 				2481407B283CA264007E8381 /* Server+CoreDataClass.swift in Sources */,
 				24814083283D283E007E8381 /* ServerCreateView.swift in Sources */,
+				24F46866283E926800C7D876 /* FlipView.swift in Sources */,
+				24F46858283DB81000C7D876 /* TemperatureType.swift in Sources */,
 				2481407E283CA508007E8381 /* ServerView.swift in Sources */,
+				24F46853283D6FF200C7D876 /* StatusItemModel.swift in Sources */,
 				24814043283C9367007E8381 /* Persistence.swift in Sources */,
 				24814081283CA8E3007E8381 /* ServerStorage.swift in Sources */,
+				24814098283D5C98007E8381 /* StatusItem.swift in Sources */,
+				24F4685E283DD2B200C7D876 /* RingShape.swift in Sources */,
 				24814085283D2AF7007E8381 /* MainTabView.swift in Sources */,
 				2481403A283C9365007E8381 /* Server_RackApp.swift in Sources */,
 				24814046283C9367007E8381 /* Server_Rack.xcdatamodeld in Sources */,
+				24F46862283DD69B00C7D876 /* StatusMultiRing.swift in Sources */,
+				24F4685B283DC0DB00C7D876 /* StatusItemRing.swift in Sources */,
 				2481407C283CA264007E8381 /* Server+CoreDataProperties.swift in Sources */,
 				2481406E283C942B007E8381 /* StatusView.swift in Sources */,
+				24814094283D538A007E8381 /* ServerViewItem.swift in Sources */,
 				24814074283C9F4F007E8381 /* SSHConnection.swift in Sources */,
+				24F46856283D9A0400C7D876 /* String+etx.swift in Sources */,
+				24814092283D4322007E8381 /* SecurityManager.swift in Sources */,
+				24F46864283DF4D800C7D876 /* Temp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

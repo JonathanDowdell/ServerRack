@@ -8,19 +8,26 @@
 import Foundation
 import Citadel
 
-class SSHConnection {
+protocol SSHConnectionProtocol {
+    func connect() async throws
+    func disconnect() async throws
+}
+
+class SSHConnection: SSHConnectionProtocol {
     var client: SSHClient?
     
-    private let server: Server
+    let server: Server
     
-    init(_ server: Server) async throws {
+    init(_ server: Server) {
         self.server = server
-        try await connect()
+        Task {
+            try await connect()
+        }
     }
     
-    func send() async throws -> String? {
+    func send(command: String) async throws -> String? {
         if let client = client {
-            let blob = try await client.executeCommand("echo \(UUID().uuidString)")
+            let blob = try await client.executeCommand(command)
             return blob.getString(at: 0, length: blob.readableBytes)
         } else {
             print("Please Connect to Server")

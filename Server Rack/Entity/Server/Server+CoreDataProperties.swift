@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import KeychainAccess
 import CoreData
 
 
@@ -19,13 +20,27 @@ extension Server {
     @NSManaged public var name: String
     @NSManaged public var host: String
     @NSManaged public var port: Int32
+    @NSManaged public var order: Int16
     @NSManaged public var user: String
     @NSManaged public var encrypted_password: Data?
     @NSManaged public var show: Bool
 
     var password: String {
         get {
-            return "Pro2711,."
+            guard
+                let data = encrypted_password,
+                let decryptedData = SecurityManager.shared.decrypt(data, using: SecurityKey.Password.rawValue),
+                let password = String(data: decryptedData, encoding: .utf8)
+            else { return "" }
+            
+            return password
+        }
+        set {
+            guard
+                let data = newValue.data(using: .utf8),
+                let encryptedData = SecurityManager.shared.encrypt(data, using: SecurityKey.Password.rawValue)
+            else { return }
+            self.encrypted_password = encryptedData
         }
     }
 }

@@ -4,11 +4,12 @@
         <attribute name="encrypted_password" optional="YES" attributeType="Binary"/>
         <attribute name="host" attributeType="String" defaultValueString=""/>
         <attribute name="name" attributeType="String" defaultValueString=""/>
+        <attribute name="order" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="port" attributeType="Integer 32" defaultValueString="22" usesScalarValueType="YES"/>
         <attribute name="show" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="user" attributeType="String" defaultValueString=""/>
     </entity>
     <elements>
-        <element name="Server" positionX="-54" positionY="-9" width="128" height="119"/>
+        <element name="Server" positionX="-54" positionY="-9" width="128" height="134"/>
     </elements>
 </model>

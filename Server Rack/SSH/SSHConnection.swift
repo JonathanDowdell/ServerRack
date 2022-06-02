@@ -9,6 +9,7 @@ import Foundation
 import Citadel
 
 protocol SSHConnectionProtocol {
+    func send(command: String) async throws -> String?
     func connect() async throws
     func disconnect() async throws
 }
@@ -20,9 +21,10 @@ class SSHConnection: SSHConnectionProtocol {
     
     init(_ server: Server) {
         self.server = server
-        Task {
-            try await connect()
-        }
+    }
+    
+    deinit {
+        print("Deinited - SSHConnection")
     }
     
     func send(command: String) async throws -> String? {
@@ -36,17 +38,21 @@ class SSHConnection: SSHConnectionProtocol {
     }
     
     func connect() async throws {
-        let host = server.host
-        let port = server.port
-        let user = server.user
-        let password = server.password
-        self.client = try await SSHClient.connect(
-            host: host, port: Int(port),
-            authenticationMethod: .passwordBased(username: user, password: password),
-            hostKeyValidator: .acceptAnything(),
-            reconnect: .never
-        )
-        print("Connected to Server")
+        if client == nil {
+            let host = server.host
+            let port = server.port
+            let user = server.user
+            let password = server.password
+            self.client = try await SSHClient.connect(
+                host: host, port: Int(port),
+                authenticationMethod: .passwordBased(username: user, password: password),
+                hostKeyValidator: .acceptAnything(),
+                reconnect: .never
+            )
+            print("Connected to Server")
+        } else {
+            print("Already Connected to Server")
+        }
     }
     
     func disconnect() async throws {

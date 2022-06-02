@@ -29,6 +29,10 @@
 		24814092283D4322007E8381 /* SecurityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814091283D4322007E8381 /* SecurityManager.swift */; };
 		24814094283D538A007E8381 /* ServerViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814093283D538A007E8381 /* ServerViewItem.swift */; };
 		24814098283D5C98007E8381 /* StatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814097283D5C98007E8381 /* StatusItem.swift */; };
+		248C347E28486EA80042FB89 /* ServerIOStatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C347D28486EA80042FB89 /* ServerIOStatusItem.swift */; };
+		248C3481284878610042FB89 /* ServerConfigListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C3480284878610042FB89 /* ServerConfigListView.swift */; };
+		248C3483284878FD0042FB89 /* ServerConfigItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C3482284878FD0042FB89 /* ServerConfigItem.swift */; };
+		248C34852848790E0042FB89 /* ServerConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C34842848790E0042FB89 /* ServerConfigView.swift */; };
 		24F46853283D6FF200C7D876 /* StatusItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46852283D6FF200C7D876 /* StatusItemModel.swift */; };
 		24F46856283D9A0400C7D876 /* String+etx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46855283D9A0400C7D876 /* String+etx.swift */; };
 		24F46858283DB81000C7D876 /* TemperatureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46857283DB81000C7D876 /* TemperatureType.swift */; };
@@ -36,8 +40,17 @@
 		24F4685E283DD2B200C7D876 /* RingShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4685D283DD2B200C7D876 /* RingShape.swift */; };
 		24F46860283DD2D700C7D876 /* StatusRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4685F283DD2D700C7D876 /* StatusRing.swift */; };
 		24F46862283DD69B00C7D876 /* StatusMultiRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46861283DD69B00C7D876 /* StatusMultiRing.swift */; };
-		24F46864283DF4D800C7D876 /* Temp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46863283DF4D800C7D876 /* Temp.swift */; };
 		24F46866283E926800C7D876 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46865283E926800C7D876 /* FlipView.swift */; };
+		24F4686A283ECF0500C7D876 /* TempStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46869283ECF0500C7D876 /* TempStatus.swift */; };
+		24F4686F283ED25100C7D876 /* ServerStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4686E283ED25100C7D876 /* ServerStatusView.swift */; };
+		24F46871283ED39F00C7D876 /* ServerStatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46870283ED39F00C7D876 /* ServerStatusItem.swift */; };
+		24F46873283EE07100C7D876 /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46872283EE07100C7D876 /* Commands.swift */; };
+		24F46877283F0C5000C7D876 /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46876283F0C5000C7D876 /* CPU.swift */; };
+		24F46879283F34E000C7D876 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46878283F34E000C7D876 /* Memory.swift */; };
+		24F4687B283F3E6000C7D876 /* Swap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4687A283F3E6000C7D876 /* Swap.swift */; };
+		24F4687E2841440100C7D876 /* PulsatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4687D2841440100C7D876 /* PulsatingView.swift */; };
+		24F4688028451BD900C7D876 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4687F28451BD900C7D876 /* Network.swift */; };
+		24F468862845C90B00C7D876 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F468852845C90B00C7D876 /* Storage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +94,10 @@
 		24814091283D4322007E8381 /* SecurityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityManager.swift; sourceTree = "<group>"; };
 		24814093283D538A007E8381 /* ServerViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerViewItem.swift; sourceTree = "<group>"; };
 		24814097283D5C98007E8381 /* StatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItem.swift; sourceTree = "<group>"; };
+		248C347D28486EA80042FB89 /* ServerIOStatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerIOStatusItem.swift; sourceTree = "<group>"; };
+		248C3480284878610042FB89 /* ServerConfigListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigListView.swift; sourceTree = "<group>"; };
+		248C3482284878FD0042FB89 /* ServerConfigItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigItem.swift; sourceTree = "<group>"; };
+		248C34842848790E0042FB89 /* ServerConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigView.swift; sourceTree = "<group>"; };
 		24F46852283D6FF200C7D876 /* StatusItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemModel.swift; sourceTree = "<group>"; };
 		24F46855283D9A0400C7D876 /* String+etx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+etx.swift"; sourceTree = "<group>"; };
 		24F46857283DB81000C7D876 /* TemperatureType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureType.swift; sourceTree = "<group>"; };
@@ -88,8 +105,17 @@
 		24F4685D283DD2B200C7D876 /* RingShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingShape.swift; sourceTree = "<group>"; };
 		24F4685F283DD2D700C7D876 /* StatusRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusRing.swift; sourceTree = "<group>"; };
 		24F46861283DD69B00C7D876 /* StatusMultiRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMultiRing.swift; sourceTree = "<group>"; };
-		24F46863283DF4D800C7D876 /* Temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Temp.swift; sourceTree = "<group>"; };
 		24F46865283E926800C7D876 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
+		24F46869283ECF0500C7D876 /* TempStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempStatus.swift; sourceTree = "<group>"; };
+		24F4686E283ED25100C7D876 /* ServerStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusView.swift; sourceTree = "<group>"; };
+		24F46870283ED39F00C7D876 /* ServerStatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusItem.swift; sourceTree = "<group>"; };
+		24F46872283EE07100C7D876 /* Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
+		24F46876283F0C5000C7D876 /* CPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
+		24F46878283F34E000C7D876 /* Memory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
+		24F4687A283F3E6000C7D876 /* Swap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swap.swift; sourceTree = "<group>"; };
+		24F4687D2841440100C7D876 /* PulsatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulsatingView.swift; sourceTree = "<group>"; };
+		24F4687F28451BD900C7D876 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		24F468852845C90B00C7D876 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +149,6 @@
 		2481402D283C9365007E8381 = {
 			isa = PBXGroup;
 			children = (
-				24F46863283DF4D800C7D876 /* Temp.swift */,
 				24814038283C9365007E8381 /* Server Rack */,
 				2481404E283C9367007E8381 /* Server RackTests */,
 				24814058283C9367007E8381 /* Server RackUITests */,
@@ -191,6 +216,8 @@
 			isa = PBXGroup;
 			children = (
 				24814084283D2AF7007E8381 /* MainTabView.swift */,
+				24F4686D283ED24200C7D876 /* ServerStatus */,
+				248C347F284878330042FB89 /* ServerConfig */,
 				24814096283D53E4007E8381 /* Status */,
 				24814095283D53AA007E8381 /* Server */,
 				24F4685C283DD2AA00C7D876 /* Misc */,
@@ -201,7 +228,13 @@
 		24814071283C9D26007E8381 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				24F46876283F0C5000C7D876 /* CPU.swift */,
+				24F4687A283F3E6000C7D876 /* Swap.swift */,
+				24F46878283F34E000C7D876 /* Memory.swift */,
+				24F4687F28451BD900C7D876 /* Network.swift */,
+				24F468852845C90B00C7D876 /* Storage.swift */,
 				24F46857283DB81000C7D876 /* TemperatureType.swift */,
+				24F46872283EE07100C7D876 /* Commands.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -263,8 +296,19 @@
 				2481406D283C942B007E8381 /* StatusView.swift */,
 				24814097283D5C98007E8381 /* StatusItem.swift */,
 				24F4685A283DC0DB00C7D876 /* StatusItemRing.swift */,
+				24F46869283ECF0500C7D876 /* TempStatus.swift */,
 			);
 			path = Status;
+			sourceTree = "<group>";
+		};
+		248C347F284878330042FB89 /* ServerConfig */ = {
+			isa = PBXGroup;
+			children = (
+				248C3480284878610042FB89 /* ServerConfigListView.swift */,
+				248C3482284878FD0042FB89 /* ServerConfigItem.swift */,
+				248C34842848790E0042FB89 /* ServerConfigView.swift */,
+			);
+			path = ServerConfig;
 			sourceTree = "<group>";
 		};
 		24F46854283D99F600C7D876 /* Extension */ = {
@@ -290,8 +334,19 @@
 				24F4685F283DD2D700C7D876 /* StatusRing.swift */,
 				24F46861283DD69B00C7D876 /* StatusMultiRing.swift */,
 				24F46865283E926800C7D876 /* FlipView.swift */,
+				24F4687D2841440100C7D876 /* PulsatingView.swift */,
 			);
 			path = Misc;
+			sourceTree = "<group>";
+		};
+		24F4686D283ED24200C7D876 /* ServerStatus */ = {
+			isa = PBXGroup;
+			children = (
+				24F4686E283ED25100C7D876 /* ServerStatusView.swift */,
+				24F46870283ED39F00C7D876 /* ServerStatusItem.swift */,
+				248C347D28486EA80042FB89 /* ServerIOStatusItem.swift */,
+			);
+			path = ServerStatus;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -436,27 +491,40 @@
 			files = (
 				24F46860283DD2D700C7D876 /* StatusRing.swift in Sources */,
 				2481407B283CA264007E8381 /* Server+CoreDataClass.swift in Sources */,
+				24F46877283F0C5000C7D876 /* CPU.swift in Sources */,
 				24814083283D283E007E8381 /* ServerCreateView.swift in Sources */,
 				24F46866283E926800C7D876 /* FlipView.swift in Sources */,
 				24F46858283DB81000C7D876 /* TemperatureType.swift in Sources */,
+				24F4687E2841440100C7D876 /* PulsatingView.swift in Sources */,
 				2481407E283CA508007E8381 /* ServerView.swift in Sources */,
+				24F4688028451BD900C7D876 /* Network.swift in Sources */,
 				24F46853283D6FF200C7D876 /* StatusItemModel.swift in Sources */,
+				24F4686F283ED25100C7D876 /* ServerStatusView.swift in Sources */,
+				24F4686A283ECF0500C7D876 /* TempStatus.swift in Sources */,
 				24814043283C9367007E8381 /* Persistence.swift in Sources */,
 				24814081283CA8E3007E8381 /* ServerStorage.swift in Sources */,
+				248C3483284878FD0042FB89 /* ServerConfigItem.swift in Sources */,
+				24F46873283EE07100C7D876 /* Commands.swift in Sources */,
 				24814098283D5C98007E8381 /* StatusItem.swift in Sources */,
 				24F4685E283DD2B200C7D876 /* RingShape.swift in Sources */,
 				24814085283D2AF7007E8381 /* MainTabView.swift in Sources */,
 				2481403A283C9365007E8381 /* Server_RackApp.swift in Sources */,
+				248C347E28486EA80042FB89 /* ServerIOStatusItem.swift in Sources */,
+				248C34852848790E0042FB89 /* ServerConfigView.swift in Sources */,
 				24814046283C9367007E8381 /* Server_Rack.xcdatamodeld in Sources */,
 				24F46862283DD69B00C7D876 /* StatusMultiRing.swift in Sources */,
+				24F46871283ED39F00C7D876 /* ServerStatusItem.swift in Sources */,
+				24F468862845C90B00C7D876 /* Storage.swift in Sources */,
 				24F4685B283DC0DB00C7D876 /* StatusItemRing.swift in Sources */,
+				248C3481284878610042FB89 /* ServerConfigListView.swift in Sources */,
+				24F4687B283F3E6000C7D876 /* Swap.swift in Sources */,
 				2481407C283CA264007E8381 /* Server+CoreDataProperties.swift in Sources */,
 				2481406E283C942B007E8381 /* StatusView.swift in Sources */,
 				24814094283D538A007E8381 /* ServerViewItem.swift in Sources */,
+				24F46879283F34E000C7D876 /* Memory.swift in Sources */,
 				24814074283C9F4F007E8381 /* SSHConnection.swift in Sources */,
 				24F46856283D9A0400C7D876 /* String+etx.swift in Sources */,
 				24814092283D4322007E8381 /* SecurityManager.swift in Sources */,
-				24F46864283DF4D800C7D876 /* Temp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -789,8 +857,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Joannis/Citadel.git";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = revision;
+				revision = 6595276735fc50eb4102c46c0adb8f9da13ef8ae;
 			};
 		};
 		24814086283D3FC2007E8381 /* XCRemoteSwiftPackageReference "RNCryptor" */ = {

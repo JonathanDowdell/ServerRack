@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-enum Commands: String {
-    case cpuTemp = "cat /sys/class/hwmon/hwmon*/temp*"
-    case cpuLoad = "top -bn1 | sed -n '/top -/p'"
-    case cpuIdle = "top -bn1 | sed -n '/Cpu/p'"
-}
-
 class StatusItemModel: SSHConnection, ObservableObject {
     
     @Published var temperature = ""
@@ -37,7 +31,7 @@ class StatusItemModel: SSHConnection, ObservableObject {
     
     fileprivate func fetchTemp() async throws {
         let tempType = TemperatureType(rawValue: userDefault.integer(forKey: "TemperatureType"))
-        let data = (try await self.send(command: Commands.cpuTemp.rawValue) ?? "").trimmingCharacters(in: .newlines)
+        let data = (try await self.send(command: Commands.SysHwmonTemp.rawValue) ?? "").trimmingCharacters(in: .newlines)
         let celsius = Int((Double(data) ?? 0) * 0.001)
         switch tempType {
         case .fahrenheit:
@@ -57,7 +51,7 @@ class StatusItemModel: SSHConnection, ObservableObject {
     }
     
     fileprivate func fetchCpuLoad() async throws {
-        let data = (try await self.send(command: Commands.cpuLoad.rawValue) ?? "")
+        let data = (try await self.send(command: Commands.TopTop.rawValue) ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
         if let index = data.index(of: "load average: ") {
@@ -75,7 +69,7 @@ class StatusItemModel: SSHConnection, ObservableObject {
     }
     
     fileprivate func fetchCpuIdle() async throws {
-        let data = (try await self.send(command: Commands.cpuIdle.rawValue) ?? "")
+        let data = (try await self.send(command: Commands.TopCPU.rawValue) ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
             .replacingOccurrences(of: " ", with: "")
@@ -89,7 +83,7 @@ class StatusItemModel: SSHConnection, ObservableObject {
     }
     
     fileprivate func fetchCpuUsage() async throws {
-        let data = (try await self.send(command: Commands.cpuLoad.rawValue) ?? "")
+        let data = (try await self.send(command: Commands.TopTop.rawValue) ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
         if let index = data.index(of: "load average: ") {

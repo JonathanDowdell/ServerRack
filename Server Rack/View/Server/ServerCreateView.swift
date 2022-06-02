@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ServerCreateViewModel: ObservableObject {
+class ServerConfigViewModel: ObservableObject {
     
     @Published var name = ""
     
@@ -70,7 +70,7 @@ class ServerCreateViewModel: ObservableObject {
 
 struct ServerCreateView: View {
     
-    @StateObject var vm: ServerCreateViewModel
+    @StateObject var vm: ServerConfigViewModel
     
     @Environment(\.presentationMode) var presentationMode
     

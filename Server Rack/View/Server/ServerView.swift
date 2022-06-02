@@ -69,6 +69,8 @@ struct ServerView: View {
     
     @StateObject var vm: ServerViewModel
     
+    @AppStorage("temperature") var temperatureType: TemperatureType = .fahrenheit
+    
     var body: some View {
         NavigationView {
             List {
@@ -101,15 +103,17 @@ struct ServerView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         vm.presentCreateServerView = true
+                        temperatureType = .celsius
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
             .sheet(isPresented: $vm.presentCreateServerView) {
-                ServerCreateView(vm: .init())
+                ServerConfigView()
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

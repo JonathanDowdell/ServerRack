@@ -10,13 +10,13 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            StatusView(vm: .init())
+            ServerStatusView()
                 .tabItem {
                     Image(systemName: "speedometer")
                     Text("Status")
                 }
             
-            ServerView(vm: .init())
+            ServerConfigListView()
                 .tabItem {
                     Image(systemName: "server.rack")
                     Text("Servers")

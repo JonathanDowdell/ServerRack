@@ -73,7 +73,8 @@ struct StatusView: View {
             ScrollView {
                 LazyVStack {
                     ForEach(vm.servers, id: \.self) { server in
-                        StatusItem(vm: .init(server: server))
+//                        StatusItem(vm: .init(server: server))
+//                        TempStatus(server: server)
                     }
                     .onDelete { indexSet in
                         vm.deleteServer(indexSet)

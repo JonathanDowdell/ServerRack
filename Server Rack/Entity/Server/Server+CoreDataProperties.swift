@@ -2,12 +2,11 @@
 //  Server+CoreDataProperties.swift
 //  Server Rack
 //
-//  Created by Jonathan Dowdell on 5/24/22.
+//  Created by Jonathan Dowdell on 6/6/22.
 //
 //
 
 import Foundation
-import KeychainAccess
 import CoreData
 
 
@@ -17,6 +16,7 @@ extension Server {
         return NSFetchRequest<Server>(entityName: "Server")
     }
 
+    @NSManaged public var id: UUID
     @NSManaged public var name: String
     @NSManaged public var host: String
     @NSManaged public var port: Int32

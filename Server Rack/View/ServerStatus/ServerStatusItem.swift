@@ -25,6 +25,8 @@ struct ServerStatusItem: View {
     
     @AppStorage("temperature") private var temperatureType: TemperatureType = .fahrenheit
     
+    @AppStorage("displaygrid") private var displayGridType: DisplayGridType = .stack
+    
     @EnvironmentObject var serverCache: ServerCache
     
     @State private var loaded = false
@@ -38,276 +40,9 @@ struct ServerStatusItem: View {
     
     var body: some View {
         GroupBox {
-            VStack(spacing: 12) {
-                HStack {
-                    Text(server.name)
-                        .bold()
-                        .font(.headline)
-                    
-                    Spacer()
-                    
-                    HStack(spacing: 15) {
-                        if loaded {
-                            switch temperatureType {
-                            case .fahrenheit:
-                                Text("\(fahrenheit)°F")
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            case .celsius:
-                                Text("\(celsius)°C")
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            }
-                        } else {
-                            PulsatingView()
-                                .frame(width: 20, height: 20, alignment: .center)
-                        }
-                        
-                        Button {
-                            temperatureType = .fahrenheit
-                        } label: {
-                            Image(systemName: "square.3.stack.3d")
-                                .foregroundColor(.accentColor)
-                        }
-                        
-                        Button {
-                            temperatureType = .celsius
-                        } label: {
-                            Image(systemName: "terminal")
-                                .foregroundColor(.accentColor)
-                        }
-                    }
-                }
-                
-                HStack {
-                    FlipView {
-                        VStack(spacing: 12) {
-                            StatusMultiRing(
-                                percent: cpuLoad,
-                                startAngle: -90,
-                                ringWidth: 5,
-                                ringSpaceOffSet: 12,
-                                ringColor: .green
-                            )
-                            .frame(width: 55, height: 55, alignment: .center)
-                            Text("Load")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    } backView: {
-                        VStack(spacing: 12) {
-                            ZStack {
-                                StatusRing(
-                                    percent: cpuPercentage,
-                                    startAngle: -90,
-                                    ringWidth: 7,
-                                    ringColor: .green,
-                                    backgroundColor: Color(.systemGray4),
-                                    drawnClockwise: false
-                                )
-                                
-                                
-                                Group {
-                                    if cpuIdle == -1 {
-                                        Text("%")
-                                    } else {
-                                        Text("\(Int8(100.0 - cpuIdle))%")
-                                    }
-                                }
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            }
-                            .frame(width: 55, height: 55, alignment: .center)
-                            
-                            Text("CPU")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .padding(.leading, 2)
-
-                    FlipView {
-                        VStack(spacing: 12) {
-                            ZStack {
-                                StatusRing(
-                                    percent: memoryUsed,
-                                    startAngle: -90,
-                                    ringWidth: 7,
-                                    ringColor: .green,
-                                    backgroundColor: Color(.systemGray4),
-                                    drawnClockwise: false
-                                )
-                                
-                                Group {
-                                    if memoryUsed == 0.001 {
-                                        Text("%")
-                                    } else {
-                                        Text("\(Int8(memoryUsed))%")
-                                    }
-                                }
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                
-                            }
-                            .frame(width: 55, height: 55, alignment: .center)
-                            
-                            Text("Mem")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    } backView: {
-                        VStack(spacing: 12) {
-                            ZStack {
-                                StatusRing(
-                                    percent: swapUsed,
-                                    startAngle: -90,
-                                    ringWidth: 7,
-                                    ringColor: .green,
-                                    backgroundColor: Color(.systemGray4),
-                                    drawnClockwise: false
-                                )
-                                
-                                Group {
-                                    if swapUsed == 0.001 {
-                                        Text("%")
-                                    } else {
-                                        Text("\(Int8(swapUsed))%")
-                                    }
-                                }
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            }
-                            .frame(width: 55, height: 55, alignment: .center)
-                            
-                            Text("Swap")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .padding(.leading, 38)
-                    
-                    Spacer()
-                    
-                    FlipView {
-                        ServerIOStatusItem(
-                            topValue: networkUp,
-                            topString: "upload",
-                            bottomValue: networkDown,
-                            bottomString: "download"
-                        )
-                    } backView: {
-                        VStack {
-                            HStack(alignment: .bottom, spacing: 3) {
-                                Text("30")
-                                    .font(.system(.body, design: .monospaced))
-                                    .foregroundColor(.green)
-                                    .bold()
-                                Text("K")
-                                    .font(.system(.caption2, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            HStack(alignment: .center, spacing: 0) {
-                                Image(systemName: "arrow.up")
-                                    .font(.caption2)
-                                Text("/")
-                                    .font(.subheadline)
-                                Text("s")
-                                    .font(.system(.subheadline, design: .monospaced))
-                                    .padding(.leading, 2)
-                            }
-                            .foregroundColor(.secondary)
-                            .padding(.bottom, 0.5)
-                            
-                            
-                            HStack(alignment: .bottom, spacing: 3) {
-                                Text("1")
-                                    .font(.system(.body, design: .monospaced))
-                                    .foregroundColor(.green)
-                                    .bold()
-                                Text("K")
-                                    .font(.system(.caption2, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            HStack(alignment: .center, spacing: 0) {
-                                Image(systemName: "arrow.down")
-                                    .font(.caption2)
-                                Text("/")
-                                    .font(.subheadline)
-                                Text("s")
-                                    .font(.system(.subheadline, design: .monospaced))
-                                    .padding(.leading, 2)
-                            }
-                            .foregroundColor(.secondary)
-                            
-                            Spacer()
-                        }
-                    }
-
-                    
-                    Spacer()
-                    
-                    FlipView {
-                        ServerIOStatusItem(
-                            topValue: totalReads,
-                            topString: "Read",
-                            bottomValue: totalWrites,
-                            bottomString: "Write"
-                        )
-                    } backView: {
-                        VStack {
-                            HStack(alignment: .bottom, spacing: 3) {
-                                Text("30")
-                                    .font(.system(.body, design: .monospaced))
-                                    .foregroundColor(.green)
-                                    .bold()
-                                Text("K")
-                                    .font(.system(.caption2, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            HStack(alignment: .center, spacing: 0) {
-                                Image(systemName: "arrow.up")
-                                    .font(.caption2)
-                                Text("/")
-                                    .font(.subheadline)
-                                Text("s")
-                                    .font(.system(.subheadline, design: .monospaced))
-                                    .padding(.leading, 2)
-                            }
-                            .foregroundColor(.secondary)
-                            .padding(.bottom, 0.5)
-                            
-                            
-                            HStack(alignment: .bottom, spacing: 3) {
-                                Text("1")
-                                    .font(.system(.body, design: .monospaced))
-                                    .foregroundColor(.green)
-                                    .bold()
-                                Text("K")
-                                    .font(.system(.caption2, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            }
-                            
-                            HStack(alignment: .center, spacing: 0) {
-                                Image(systemName: "arrow.down")
-                                    .font(.caption2)
-                                Text("/")
-                                    .font(.subheadline)
-                                Text("s")
-                                    .font(.system(.subheadline, design: .monospaced))
-                                    .padding(.leading, 2)
-                            }
-                            .foregroundColor(.secondary)
-                            
-                            Spacer()
-                        }
-                    }
-                    
-                    Spacer()
-                        .frame(maxWidth: 15, alignment: .center)
-                }
+            switch displayGridType {
+            case .stack: normal
+            case .grid: twoByTwo
             }
         }
         .onAppear {
@@ -363,11 +98,19 @@ struct ServerStatusItem: View {
                 self.loaded = true
                 withAnimation(.spring()) {
                     cpu.update(rawCPURow: rawCpuRowData, rawTopRow: rawTopRowData, temperatureData: temperatureData)
+                    cpu.cache(id: server.id)
+                    
                     memory.update(rawMemRow: rawMemRowData)
+                    memory.cache(id: server.id)
+                    
                     swap.update(rawSwapRow: rawSwapRowData)
+                    swap.cache(id: server.id)
+                    
                     network.update(rawNetworkData: rawNetworkData)
+                    network.cache(id: server.id)
+                    
                     storage.update(rawDiskFreeData: rawDiskFreeData, rawProcDiskStatsData: rawProcDiskStatsData)
-                    print(serverCache.cache["alpha"]?["up"] ?? "Nil")
+                    storage.cache(id: server.id)
                 }
             }
         }
@@ -375,12 +118,370 @@ struct ServerStatusItem: View {
 }
 
 extension ServerStatusItem {
+    var twoByTwo: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text(server.name)
+                    .bold()
+                    .font(.headline)
+                    .lineLimit(1)
+                
+                Spacer()
+                
+                HStack(spacing: 15) {
+                    if loaded || hasLoaded {
+                        Group {
+                            switch temperatureType {
+                            case .fahrenheit:
+                                Text("\(fahrenheit)°F")
+                                    .font(.system(.caption, design: .monospaced))
+                                    .foregroundColor(.secondary)
+                            case .celsius:
+                                Text("\(celsius)°C")
+                                    .font(.system(.caption, design: .monospaced))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    } else {
+                        PulsatingView()
+                            .frame(width: 20, height: 20, alignment: .center)
+                    }
+                }
+            }
+            
+            FlipView {
+                VStack(spacing: 12) {
+                    StatusMultiRing(
+                        percent: cpuLoad,
+                        startAngle: -90,
+                        ringWidth: 5,
+                        ringSpaceOffSet: 12,
+                        ringColor: .green
+                    )
+                    .frame(width: 55, height: 55, alignment: .center)
+                    Text("Load")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            } backView: {
+                VStack(spacing: 12) {
+                    ZStack {
+                        StatusRing(
+                            percent: cpuPercentage,
+                            startAngle: -90,
+                            ringWidth: 7,
+                            ringColor: .green,
+                            backgroundColor: Color(.systemGray4),
+                            drawnClockwise: false
+                        )
+                        
+                        let idle = cpuIdle
+                        Group {
+                            if idle == -1 {
+                                Text("%")
+                            } else {
+                                Text("\(Int8(100.0 - idle))%")
+                            }
+                        }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    }
+                    .frame(width: 55, height: 55, alignment: .center)
+                    
+                    Text("CPU")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+    }
+    
+    var normal: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text(server.name)
+                    .bold()
+                    .font(.headline)
+                
+                Spacer()
+                
+                HStack(spacing: 15) {
+                    if loaded || hasLoaded {
+                        switch temperatureType {
+                        case .fahrenheit:
+                            Text("\(fahrenheit)°F")
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.secondary)
+                        case .celsius:
+                            Text("\(celsius)°C")
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.secondary)
+                        }
+                    } else {
+                        PulsatingView()
+                            .frame(width: 20, height: 20, alignment: .center)
+                    }
+                    
+                    Button {
+                        temperatureType = .fahrenheit
+                    } label: {
+                        Image(systemName: "square.3.stack.3d")
+                            .foregroundColor(.accentColor)
+                    }
+                    
+                    Button {
+                        temperatureType = .celsius
+                    } label: {
+                        Image(systemName: "terminal")
+                            .foregroundColor(.accentColor)
+                    }
+                }
+            }
+            
+            HStack {
+                FlipView {
+                    VStack(spacing: 12) {
+                        StatusMultiRing(
+                            percent: cpuLoad,
+                            startAngle: -90,
+                            ringWidth: 5,
+                            ringSpaceOffSet: 12,
+                            ringColor: .green
+                        )
+                        .frame(width: 55, height: 55, alignment: .center)
+                        Text("Load")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                } backView: {
+                    VStack(spacing: 12) {
+                        ZStack {
+                            StatusRing(
+                                percent: cpuPercentage,
+                                startAngle: -90,
+                                ringWidth: 7,
+                                ringColor: .green,
+                                backgroundColor: Color(.systemGray4),
+                                drawnClockwise: false
+                            )
+                            
+                            
+                            Group {
+                                if cpuIdle == -1 {
+                                    Text("%")
+                                } else {
+                                    Text("\(Int8(100.0 - cpuIdle))%")
+                                }
+                            }
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        }
+                        .frame(width: 55, height: 55, alignment: .center)
+                        
+                        Text("CPU")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.leading, 2)
+
+                FlipView {
+                    VStack(spacing: 12) {
+                        ZStack {
+                            StatusRing(
+                                percent: memoryUsed,
+                                startAngle: -90,
+                                ringWidth: 7,
+                                ringColor: .green,
+                                backgroundColor: Color(.systemGray4),
+                                drawnClockwise: false
+                            )
+                            
+                            Group {
+                                if memoryUsed == 0.001 {
+                                    Text("%")
+                                } else {
+                                    Text("\(Int8(memoryUsed))%")
+                                }
+                            }
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            
+                        }
+                        .frame(width: 55, height: 55, alignment: .center)
+                        
+                        Text("Mem")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                } backView: {
+                    VStack(spacing: 12) {
+                        ZStack {
+                            StatusRing(
+                                percent: swapUsed,
+                                startAngle: -90,
+                                ringWidth: 7,
+                                ringColor: .green,
+                                backgroundColor: Color(.systemGray4),
+                                drawnClockwise: false
+                            )
+                            
+                            Group {
+                                if swapUsed == 0.001 {
+                                    Text("%")
+                                } else {
+                                    Text("\(Int8(swapUsed))%")
+                                }
+                            }
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        }
+                        .frame(width: 55, height: 55, alignment: .center)
+                        
+                        Text("Swap")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.leading, 38)
+                
+                Spacer()
+                
+                FlipView {
+                    ServerIOStatusItem(
+                        topValue: networkUp,
+                        topString: "upload",
+                        bottomValue: networkDown,
+                        bottomString: "download"
+                    )
+                } backView: {
+                    VStack {
+                        HStack(alignment: .bottom, spacing: 3) {
+                            Text("30")
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.green)
+                                .bold()
+                            Text("K")
+                                .font(.system(.caption2, design: .monospaced))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        HStack(alignment: .center, spacing: 0) {
+                            Image(systemName: "arrow.up")
+                                .font(.caption2)
+                            Text("/")
+                                .font(.subheadline)
+                            Text("s")
+                                .font(.system(.subheadline, design: .monospaced))
+                                .padding(.leading, 2)
+                        }
+                        .foregroundColor(.secondary)
+                        .padding(.bottom, 0.5)
+                        
+                        
+                        HStack(alignment: .bottom, spacing: 3) {
+                            Text("1")
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.green)
+                                .bold()
+                            Text("K")
+                                .font(.system(.caption2, design: .monospaced))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        HStack(alignment: .center, spacing: 0) {
+                            Image(systemName: "arrow.down")
+                                .font(.caption2)
+                            Text("/")
+                                .font(.subheadline)
+                            Text("s")
+                                .font(.system(.subheadline, design: .monospaced))
+                                .padding(.leading, 2)
+                        }
+                        .foregroundColor(.secondary)
+                        
+                        Spacer()
+                    }
+                }
+
+                
+                Spacer()
+                
+                FlipView {
+                    ServerIOStatusItem(
+                        topValue: totalReads,
+                        topString: "Read",
+                        bottomValue: totalWrites,
+                        bottomString: "Write"
+                    )
+                } backView: {
+                    VStack {
+                        HStack(alignment: .bottom, spacing: 3) {
+                            Text("30")
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.green)
+                                .bold()
+                            Text("K")
+                                .font(.system(.caption2, design: .monospaced))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        HStack(alignment: .center, spacing: 0) {
+                            Image(systemName: "arrow.up")
+                                .font(.caption2)
+                            Text("/")
+                                .font(.subheadline)
+                            Text("s")
+                                .font(.system(.subheadline, design: .monospaced))
+                                .padding(.leading, 2)
+                        }
+                        .foregroundColor(.secondary)
+                        .padding(.bottom, 0.5)
+                        
+                        
+                        HStack(alignment: .bottom, spacing: 3) {
+                            Text("1")
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.green)
+                                .bold()
+                            Text("K")
+                                .font(.system(.caption2, design: .monospaced))
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        HStack(alignment: .center, spacing: 0) {
+                            Image(systemName: "arrow.down")
+                                .font(.caption2)
+                            Text("/")
+                                .font(.subheadline)
+                            Text("s")
+                                .font(.system(.subheadline, design: .monospaced))
+                                .padding(.leading, 2)
+                        }
+                        .foregroundColor(.secondary)
+                        
+                        Spacer()
+                    }
+                }
+                
+                Spacer()
+                    .frame(maxWidth: 15, alignment: .center)
+            }
+        }
+    }
+    
+    
+    var hasLoaded: Bool {
+        let id = server.id.uuidString
+        return serverCache.cache[id] != nil
+    }
+    
     var fahrenheit: Int {
         if loaded {
             return cpu.fahrenheit
         } else {
             // Get Cached
-            let id = server.id.debugDescription
+            let id = server.id.uuidString
             let value = (serverCache.cache[id]?["fahrenheit"] as? Int) ?? 0
             return value
         }
@@ -391,7 +492,9 @@ extension ServerStatusItem {
             return cpu.celsius
         } else {
             // Get Cached
-            return cpu.celsius
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["celsius"] as? Int) ?? 0
+            return value
         }
     }
     
@@ -400,7 +503,9 @@ extension ServerStatusItem {
             return cpu.load
         } else {
             // Get Cached
-            return cpu.load
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["load"] as? [CGFloat]) ?? [0.001,0.001,0.001]
+            return value
         }
     }
     
@@ -408,24 +513,26 @@ extension ServerStatusItem {
         if loaded {
             return cpu.idle
         } else {
-            return cpu.idle
+            // Get Cached
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["idle"] as? CGFloat) ?? -1
+            return value
         }
     }
     
     var cpuPercentage: CGFloat {
-        if loaded {
-            return cpu.idle == -1 ? 0.001 : 100.0 - cpu.idle
-        } else {
-            // Get Cached
-            return cpu.idle == -1 ? 0.001 : 100.0 - cpu.idle
-        }
+        let idle = cpuIdle
+        return idle == -1 ? 0.001 : 100.0 - idle
     }
     
     var memoryUsed: CGFloat {
         if loaded {
             return memory.memoryUsed
         } else {
-            return memory.memoryUsed
+            // Get Cached
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["memoryUsed"] as? CGFloat) ?? 0.001
+            return value
         }
     }
     
@@ -433,7 +540,10 @@ extension ServerStatusItem {
         if loaded {
             return swap.swapUsed
         } else {
-            return swap.swapUsed
+            // Get Cached
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["swapUsed"] as? CGFloat) ?? 0.001
+            return value
         }
     }
     
@@ -441,7 +551,9 @@ extension ServerStatusItem {
         if loaded {
             return network.up
         } else {
-            return network.up
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["up"] as? Double) ?? 0
+            return value
         }
     }
     
@@ -449,7 +561,9 @@ extension ServerStatusItem {
         if loaded {
             return network.down
         } else {
-            return network.down
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["down"] as? Double) ?? 0
+            return value
         }
     }
     
@@ -457,7 +571,9 @@ extension ServerStatusItem {
         if loaded {
             return storage.totalReads
         } else {
-            return storage.totalReads
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["reads"] as? Double) ?? 0
+            return value
         }
     }
     
@@ -465,7 +581,9 @@ extension ServerStatusItem {
         if loaded {
             return storage.totalWrites
         } else {
-            return storage.totalWrites
+            let id = server.id.uuidString
+            let value = (serverCache.cache[id]?["writes"] as? Double) ?? 0
+            return value
         }
     }
 }

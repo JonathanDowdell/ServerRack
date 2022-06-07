@@ -44,6 +44,18 @@ class Memory: ObservableObject {
         self.cache = parseData(cleanedMemData, regex: "\\d*.\\d*buff")
     }
     
+    func cache(id: UUID) {
+        if ServerCache.shared.cache[id.uuidString] == nil {
+            ServerCache.shared.cache[id.uuidString] = .init()
+        }
+        
+        ServerCache.shared.cache[id.uuidString]?["total"] = self.total
+        ServerCache.shared.cache[id.uuidString]?["free"] = self.free
+        ServerCache.shared.cache[id.uuidString]?["used"] = self.used
+        ServerCache.shared.cache[id.uuidString]?["cache"] = self.cache
+        ServerCache.shared.cache[id.uuidString]?["memoryUsed"] = self.memoryUsed
+    }
+    
     private func removeWhiteSpaceAndNewLines(_ data: String) -> String {
         return data
             .trimmingCharacters(in: .whitespacesAndNewlines)

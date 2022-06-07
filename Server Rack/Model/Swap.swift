@@ -36,6 +36,18 @@ class Swap: ObservableObject {
         self.cache = parseData(cleanedSwapRow, regex: "\\d*.\\d*avail")
     }
     
+    func cache(id: UUID) {
+        if ServerCache.shared.cache[id.uuidString] == nil {
+            ServerCache.shared.cache[id.uuidString] = .init()
+        }
+        
+        ServerCache.shared.cache[id.uuidString]?["total"] = self.total
+        ServerCache.shared.cache[id.uuidString]?["free"] = self.free
+        ServerCache.shared.cache[id.uuidString]?["used"] = self.used
+        ServerCache.shared.cache[id.uuidString]?["cache"] = self.cache
+        ServerCache.shared.cache[id.uuidString]?["swapUsed"] = self.swapUsed
+    }
+    
     private func removeWhiteSpaceAndNewLines(_ data: String) -> String {
         return data
             .trimmingCharacters(in: .whitespacesAndNewlines)

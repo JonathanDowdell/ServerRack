@@ -121,6 +121,7 @@ extension ServerConfigView {
             server.show = self.showStatus
         } else {
             let server = Server(context: moc)
+            server.id = UUID()
             server.name = self.name
             server.host = self.host
             server.port = Int32(self.port) ?? 22

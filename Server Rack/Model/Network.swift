@@ -49,8 +49,15 @@ class Network: ObservableObject {
             return networkDevice
         }
         
-        ServerCache.shared.cache["alpha"] = .init()
-        ServerCache.shared.cache["alpha"]?["up"] = up
+    }
+    
+    func cache(id: UUID) {
+        if ServerCache.shared.cache[id.uuidString] == nil {
+            ServerCache.shared.cache[id.uuidString] = .init()
+        }
+        
+        ServerCache.shared.cache[id.uuidString]?["up"] = self.up
+        ServerCache.shared.cache[id.uuidString]?["down"] = self.down
     }
 }
 

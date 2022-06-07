@@ -19,6 +19,15 @@ struct ServerConfigListView: View {
     
     @State private var presentServerConfigView = false
     
+    @Environment(\.managedObjectContext) private var managedObjectContext
+    
+    fileprivate func deleteProject(_ indexSet: IndexSet) {
+        for index in indexSet {
+            managedObjectContext.delete(servers[index])
+        }
+        try? managedObjectContext.save()
+    }
+    
     var body: some View {
         NavigationView {
             List {
@@ -42,7 +51,7 @@ struct ServerConfigListView: View {
                         }
                     }
                     .onDelete { indexSet in
-                        
+                        deleteProject(indexSet)
                     }
                     .onMove { offSet, destination in
                         

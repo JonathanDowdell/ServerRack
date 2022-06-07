@@ -60,6 +60,22 @@ class CPU: ObservableObject {
         self.steal = parseStealData(cleanedCPUData)
     }
     
+    func cache(id: UUID) {
+        if ServerCache.shared.cache[id.uuidString] == nil {
+            ServerCache.shared.cache[id.uuidString] = .init()
+        }
+        
+        ServerCache.shared.cache[id.uuidString]?["idle"] = self.idle
+        ServerCache.shared.cache[id.uuidString]?["load"] = self.load
+        ServerCache.shared.cache[id.uuidString]?["temperature"] = self.temperature
+        ServerCache.shared.cache[id.uuidString]?["celsius"] = self.celsius
+        ServerCache.shared.cache[id.uuidString]?["fahrenheit"] = self.fahrenheit
+        ServerCache.shared.cache[id.uuidString]?["system"] = self.system
+        ServerCache.shared.cache[id.uuidString]?["nice"] = self.nice
+        ServerCache.shared.cache[id.uuidString]?["iowait"] = self.iowait
+        ServerCache.shared.cache[id.uuidString]?["steal"] = self.steal
+    }
+    
     private func removeWhiteSpaceAndNewLines(_ data: String) -> String {
         return data
             .trimmingCharacters(in: .whitespacesAndNewlines)

@@ -35,6 +35,15 @@ class Storage: ObservableObject {
         self.deviceIOs = parseProcDiskStatsArray(procDiskStatsArray)
     }
     
+    func cache(id: UUID) {
+        if ServerCache.shared.cache[id.uuidString] == nil {
+            ServerCache.shared.cache[id.uuidString] = .init()
+        }
+        
+        ServerCache.shared.cache[id.uuidString]?["reads"] = totalReads
+        ServerCache.shared.cache[id.uuidString]?["writes"] = totalWrites
+    }
+    
     func cleanRawDiskFreeData(_ rawDiskFreeData: String) -> [String] {
         return rawDiskFreeData.components(separatedBy: "split")
     }

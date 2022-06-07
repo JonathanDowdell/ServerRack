@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		240B0880284F0B9900F8BA9C /* Server+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B087E284F0B9900F8BA9C /* Server+CoreDataClass.swift */; };
+		240B0881284F0B9900F8BA9C /* Server+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B087F284F0B9900F8BA9C /* Server+CoreDataProperties.swift */; };
+		240B0883284F1A5B00F8BA9C /* DisplayGridType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B0882284F1A5B00F8BA9C /* DisplayGridType.swift */; };
 		2481403A283C9365007E8381 /* Server_RackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814039283C9365007E8381 /* Server_RackApp.swift */; };
 		2481403E283C9367007E8381 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2481403D283C9367007E8381 /* Assets.xcassets */; };
 		24814041283C9367007E8381 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24814040283C9367007E8381 /* Preview Assets.xcassets */; };
@@ -18,8 +21,6 @@
 		2481406A283C93F8007E8381 /* Citadel in Frameworks */ = {isa = PBXBuildFile; productRef = 24814069283C93F8007E8381 /* Citadel */; };
 		2481406E283C942B007E8381 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481406D283C942B007E8381 /* StatusView.swift */; };
 		24814074283C9F4F007E8381 /* SSHConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814073283C9F4F007E8381 /* SSHConnection.swift */; };
-		2481407B283CA264007E8381 /* Server+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814079283CA264007E8381 /* Server+CoreDataClass.swift */; };
-		2481407C283CA264007E8381 /* Server+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481407A283CA264007E8381 /* Server+CoreDataProperties.swift */; };
 		2481407E283CA508007E8381 /* ServerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2481407D283CA508007E8381 /* ServerView.swift */; };
 		24814081283CA8E3007E8381 /* ServerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814080283CA8E3007E8381 /* ServerStorage.swift */; };
 		24814083283D283E007E8381 /* ServerCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814082283D283E007E8381 /* ServerCreateView.swift */; };
@@ -72,6 +73,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		240B087E284F0B9900F8BA9C /* Server+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataClass.swift"; sourceTree = "<group>"; };
+		240B087F284F0B9900F8BA9C /* Server+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		240B0882284F1A5B00F8BA9C /* DisplayGridType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayGridType.swift; sourceTree = "<group>"; };
 		24814036283C9365007E8381 /* Server Rack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Server Rack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		24814039283C9365007E8381 /* Server_RackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server_RackApp.swift; sourceTree = "<group>"; };
 		2481403D283C9367007E8381 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -86,8 +90,6 @@
 		2481406D283C942B007E8381 /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		2481406F283C9793007E8381 /* Server-Rack-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Server-Rack-Info.plist"; sourceTree = SOURCE_ROOT; };
 		24814073283C9F4F007E8381 /* SSHConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHConnection.swift; sourceTree = "<group>"; };
-		24814079283CA264007E8381 /* Server+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataClass.swift"; sourceTree = "<group>"; };
-		2481407A283CA264007E8381 /* Server+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2481407D283CA508007E8381 /* ServerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerView.swift; sourceTree = "<group>"; };
 		24814080283CA8E3007E8381 /* ServerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStorage.swift; sourceTree = "<group>"; };
 		24814082283D283E007E8381 /* ServerCreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCreateView.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				24F4687F28451BD900C7D876 /* Network.swift */,
 				24F468852845C90B00C7D876 /* Storage.swift */,
 				24F46857283DB81000C7D876 /* TemperatureType.swift */,
+				240B0882284F1A5B00F8BA9C /* DisplayGridType.swift */,
 				24F46872283EE07100C7D876 /* Commands.swift */,
 			);
 			path = Model;
@@ -261,8 +264,8 @@
 		24814078283CA249007E8381 /* Server */ = {
 			isa = PBXGroup;
 			children = (
-				24814079283CA264007E8381 /* Server+CoreDataClass.swift */,
-				2481407A283CA264007E8381 /* Server+CoreDataProperties.swift */,
+				240B087E284F0B9900F8BA9C /* Server+CoreDataClass.swift */,
+				240B087F284F0B9900F8BA9C /* Server+CoreDataProperties.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -500,8 +503,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				240B0880284F0B9900F8BA9C /* Server+CoreDataClass.swift in Sources */,
 				24F46860283DD2D700C7D876 /* StatusRing.swift in Sources */,
-				2481407B283CA264007E8381 /* Server+CoreDataClass.swift in Sources */,
 				24F46877283F0C5000C7D876 /* CPU.swift in Sources */,
 				24814083283D283E007E8381 /* ServerCreateView.swift in Sources */,
 				24F46866283E926800C7D876 /* FlipView.swift in Sources */,
@@ -524,16 +527,17 @@
 				248C34852848790E0042FB89 /* ServerConfigView.swift in Sources */,
 				24814046283C9367007E8381 /* Server_Rack.xcdatamodeld in Sources */,
 				24F46862283DD69B00C7D876 /* StatusMultiRing.swift in Sources */,
+				240B0883284F1A5B00F8BA9C /* DisplayGridType.swift in Sources */,
 				24F46871283ED39F00C7D876 /* ServerStatusItem.swift in Sources */,
 				24F468862845C90B00C7D876 /* Storage.swift in Sources */,
 				24F4685B283DC0DB00C7D876 /* StatusItemRing.swift in Sources */,
 				24D263F2284B9DDF00A1A9E7 /* ServerCache.swift in Sources */,
 				248C3481284878610042FB89 /* ServerConfigListView.swift in Sources */,
 				24F4687B283F3E6000C7D876 /* Swap.swift in Sources */,
-				2481407C283CA264007E8381 /* Server+CoreDataProperties.swift in Sources */,
 				2481406E283C942B007E8381 /* StatusView.swift in Sources */,
 				24814094283D538A007E8381 /* ServerViewItem.swift in Sources */,
 				24F46879283F34E000C7D876 /* Memory.swift in Sources */,
+				240B0881284F0B9900F8BA9C /* Server+CoreDataProperties.swift in Sources */,
 				24814074283C9F4F007E8381 /* SSHConnection.swift in Sources */,
 				24F46856283D9A0400C7D876 /* String+etx.swift in Sources */,
 				24814092283D4322007E8381 /* SecurityManager.swift in Sources */,

@@ -15,6 +15,7 @@ struct Server_RackApp: App {
         WindowGroup {
             MainTabView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(ServerCache.shared)
         }
     }
 }

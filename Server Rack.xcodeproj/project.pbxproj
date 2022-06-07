@@ -33,6 +33,7 @@
 		248C3481284878610042FB89 /* ServerConfigListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C3480284878610042FB89 /* ServerConfigListView.swift */; };
 		248C3483284878FD0042FB89 /* ServerConfigItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C3482284878FD0042FB89 /* ServerConfigItem.swift */; };
 		248C34852848790E0042FB89 /* ServerConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C34842848790E0042FB89 /* ServerConfigView.swift */; };
+		24D263F2284B9DDF00A1A9E7 /* ServerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D263F1284B9DDF00A1A9E7 /* ServerCache.swift */; };
 		24F46853283D6FF200C7D876 /* StatusItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46852283D6FF200C7D876 /* StatusItemModel.swift */; };
 		24F46856283D9A0400C7D876 /* String+etx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46855283D9A0400C7D876 /* String+etx.swift */; };
 		24F46858283DB81000C7D876 /* TemperatureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46857283DB81000C7D876 /* TemperatureType.swift */; };
@@ -98,6 +99,7 @@
 		248C3480284878610042FB89 /* ServerConfigListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigListView.swift; sourceTree = "<group>"; };
 		248C3482284878FD0042FB89 /* ServerConfigItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigItem.swift; sourceTree = "<group>"; };
 		248C34842848790E0042FB89 /* ServerConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigView.swift; sourceTree = "<group>"; };
+		24D263F1284B9DDF00A1A9E7 /* ServerCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCache.swift; sourceTree = "<group>"; };
 		24F46852283D6FF200C7D876 /* StatusItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemModel.swift; sourceTree = "<group>"; };
 		24F46855283D9A0400C7D876 /* String+etx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+etx.swift"; sourceTree = "<group>"; };
 		24F46857283DB81000C7D876 /* TemperatureType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureType.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 		24814038283C9365007E8381 /* Server Rack */ = {
 			isa = PBXGroup;
 			children = (
+				24D263F0284B9DCA00A1A9E7 /* Cache */,
 				24F46859283DB82900C7D876 /* SSH */,
 				2481408F283D42DB007E8381 /* Security */,
 				2481407F283CA8BF007E8381 /* Storage */,
@@ -309,6 +312,14 @@
 				248C34842848790E0042FB89 /* ServerConfigView.swift */,
 			);
 			path = ServerConfig;
+			sourceTree = "<group>";
+		};
+		24D263F0284B9DCA00A1A9E7 /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				24D263F1284B9DDF00A1A9E7 /* ServerCache.swift */,
+			);
+			path = Cache;
 			sourceTree = "<group>";
 		};
 		24F46854283D99F600C7D876 /* Extension */ = {
@@ -516,6 +527,7 @@
 				24F46871283ED39F00C7D876 /* ServerStatusItem.swift in Sources */,
 				24F468862845C90B00C7D876 /* Storage.swift in Sources */,
 				24F4685B283DC0DB00C7D876 /* StatusItemRing.swift in Sources */,
+				24D263F2284B9DDF00A1A9E7 /* ServerCache.swift in Sources */,
 				248C3481284878610042FB89 /* ServerConfigListView.swift in Sources */,
 				24F4687B283F3E6000C7D876 /* Swap.swift in Sources */,
 				2481407C283CA264007E8381 /* Server+CoreDataProperties.swift in Sources */,

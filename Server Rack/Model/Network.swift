@@ -49,6 +49,8 @@ class Network: ObservableObject {
             return networkDevice
         }
         
+        ServerCache.shared.cache["alpha"] = .init()
+        ServerCache.shared.cache["alpha"]?["up"] = up
     }
 }
 

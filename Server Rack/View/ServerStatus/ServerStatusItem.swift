@@ -25,6 +25,8 @@ struct ServerStatusItem: View {
     
     @AppStorage("temperature") private var temperatureType: TemperatureType = .fahrenheit
     
+    @EnvironmentObject var serverCache: ServerCache
+    
     @State private var loaded = false
     
     private var server: Server
@@ -48,11 +50,11 @@ struct ServerStatusItem: View {
                         if loaded {
                             switch temperatureType {
                             case .fahrenheit:
-                                Text("\(cpu.fahrenheit)°F")
+                                Text("\(fahrenheit)°F")
                                     .font(.system(.caption, design: .monospaced))
                                     .foregroundColor(.secondary)
                             case .celsius:
-                                Text("\(cpu.celsius)°C")
+                                Text("\(celsius)°C")
                                     .font(.system(.caption, design: .monospaced))
                                     .foregroundColor(.secondary)
                             }
@@ -81,7 +83,7 @@ struct ServerStatusItem: View {
                     FlipView {
                         VStack(spacing: 12) {
                             StatusMultiRing(
-                                percent: cpu.load,
+                                percent: cpuLoad,
                                 startAngle: -90,
                                 ringWidth: 5,
                                 ringSpaceOffSet: 12,
@@ -96,7 +98,7 @@ struct ServerStatusItem: View {
                         VStack(spacing: 12) {
                             ZStack {
                                 StatusRing(
-                                    percent: cpu.idle == -1 ? 0.001 : 100.0 - cpu.idle,
+                                    percent: cpuPercentage,
                                     startAngle: -90,
                                     ringWidth: 7,
                                     ringColor: .green,
@@ -106,10 +108,10 @@ struct ServerStatusItem: View {
                                 
                                 
                                 Group {
-                                    if cpu.idle == -1 {
+                                    if cpuIdle == -1 {
                                         Text("%")
                                     } else {
-                                        Text("\(Int8(100.0 - cpu.idle))%")
+                                        Text("\(Int8(100.0 - cpuIdle))%")
                                     }
                                 }
                                 .font(.caption)
@@ -128,7 +130,7 @@ struct ServerStatusItem: View {
                         VStack(spacing: 12) {
                             ZStack {
                                 StatusRing(
-                                    percent: memory.memoryUsed,
+                                    percent: memoryUsed,
                                     startAngle: -90,
                                     ringWidth: 7,
                                     ringColor: .green,
@@ -137,10 +139,10 @@ struct ServerStatusItem: View {
                                 )
                                 
                                 Group {
-                                    if memory.memoryUsed == 0.001 {
+                                    if memoryUsed == 0.001 {
                                         Text("%")
                                     } else {
-                                        Text("\(Int8(memory.memoryUsed))%")
+                                        Text("\(Int8(memoryUsed))%")
                                     }
                                 }
                                 .font(.caption)
@@ -157,7 +159,7 @@ struct ServerStatusItem: View {
                         VStack(spacing: 12) {
                             ZStack {
                                 StatusRing(
-                                    percent: swap.swapUsed,
+                                    percent: swapUsed,
                                     startAngle: -90,
                                     ringWidth: 7,
                                     ringColor: .green,
@@ -166,10 +168,10 @@ struct ServerStatusItem: View {
                                 )
                                 
                                 Group {
-                                    if swap.swapUsed == 0.001 {
+                                    if swapUsed == 0.001 {
                                         Text("%")
                                     } else {
-                                        Text("\(Int8(swap.swapUsed))%")
+                                        Text("\(Int8(swapUsed))%")
                                     }
                                 }
                                 .font(.caption)
@@ -188,9 +190,9 @@ struct ServerStatusItem: View {
                     
                     FlipView {
                         ServerIOStatusItem(
-                            topValue: network.up,
+                            topValue: networkUp,
                             topString: "upload",
-                            bottomValue: network.down,
+                            bottomValue: networkDown,
                             bottomString: "download"
                         )
                     } backView: {
@@ -248,9 +250,9 @@ struct ServerStatusItem: View {
                     
                     FlipView {
                         ServerIOStatusItem(
-                            topValue: storage.totalReads,
+                            topValue: totalReads,
                             topString: "Read",
-                            bottomValue: storage.totalWrites,
+                            bottomValue: totalWrites,
                             bottomString: "Write"
                         )
                     } backView: {
@@ -365,8 +367,105 @@ struct ServerStatusItem: View {
                     swap.update(rawSwapRow: rawSwapRowData)
                     network.update(rawNetworkData: rawNetworkData)
                     storage.update(rawDiskFreeData: rawDiskFreeData, rawProcDiskStatsData: rawProcDiskStatsData)
+                    print(serverCache.cache["alpha"]?["up"] ?? "Nil")
                 }
             }
+        }
+    }
+}
+
+extension ServerStatusItem {
+    var fahrenheit: Int {
+        if loaded {
+            return cpu.fahrenheit
+        } else {
+            // Get Cached
+            let id = server.id.debugDescription
+            let value = (serverCache.cache[id]?["fahrenheit"] as? Int) ?? 0
+            return value
+        }
+    }
+    
+    var celsius: Int {
+        if loaded {
+            return cpu.celsius
+        } else {
+            // Get Cached
+            return cpu.celsius
+        }
+    }
+    
+    var cpuLoad: [CGFloat] {
+        if loaded {
+            return cpu.load
+        } else {
+            // Get Cached
+            return cpu.load
+        }
+    }
+    
+    var cpuIdle: CGFloat {
+        if loaded {
+            return cpu.idle
+        } else {
+            return cpu.idle
+        }
+    }
+    
+    var cpuPercentage: CGFloat {
+        if loaded {
+            return cpu.idle == -1 ? 0.001 : 100.0 - cpu.idle
+        } else {
+            // Get Cached
+            return cpu.idle == -1 ? 0.001 : 100.0 - cpu.idle
+        }
+    }
+    
+    var memoryUsed: CGFloat {
+        if loaded {
+            return memory.memoryUsed
+        } else {
+            return memory.memoryUsed
+        }
+    }
+    
+    var swapUsed: CGFloat {
+        if loaded {
+            return swap.swapUsed
+        } else {
+            return swap.swapUsed
+        }
+    }
+    
+    var networkUp: CGFloat {
+        if loaded {
+            return network.up
+        } else {
+            return network.up
+        }
+    }
+    
+    var networkDown: CGFloat {
+        if loaded {
+            return network.down
+        } else {
+            return network.down
+        }
+    }
+    
+    var totalReads: CGFloat {
+        if loaded {
+            return storage.totalReads
+        } else {
+            return storage.totalReads
+        }
+    }
+    
+    var totalWrites: CGFloat {
+        if loaded {
+            return storage.totalWrites
+        } else {
+            return storage.totalWrites
         }
     }
 }

@@ -10,6 +10,7 @@
 		240B0880284F0B9900F8BA9C /* Server+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B087E284F0B9900F8BA9C /* Server+CoreDataClass.swift */; };
 		240B0881284F0B9900F8BA9C /* Server+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B087F284F0B9900F8BA9C /* Server+CoreDataProperties.swift */; };
 		240B0883284F1A5B00F8BA9C /* DisplayGridType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B0882284F1A5B00F8BA9C /* DisplayGridType.swift */; };
+		241F7A2128507B9E0098C274 /* ServerStatusItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A2028507B9E0098C274 /* ServerStatusItemModel.swift */; };
 		2481403A283C9365007E8381 /* Server_RackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814039283C9365007E8381 /* Server_RackApp.swift */; };
 		2481403E283C9367007E8381 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2481403D283C9367007E8381 /* Assets.xcassets */; };
 		24814041283C9367007E8381 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24814040283C9367007E8381 /* Preview Assets.xcassets */; };
@@ -76,6 +77,7 @@
 		240B087E284F0B9900F8BA9C /* Server+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataClass.swift"; sourceTree = "<group>"; };
 		240B087F284F0B9900F8BA9C /* Server+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		240B0882284F1A5B00F8BA9C /* DisplayGridType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayGridType.swift; sourceTree = "<group>"; };
+		241F7A2028507B9E0098C274 /* ServerStatusItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusItemModel.swift; sourceTree = "<group>"; };
 		24814036283C9365007E8381 /* Server Rack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Server Rack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		24814039283C9365007E8381 /* Server_RackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server_RackApp.swift; sourceTree = "<group>"; };
 		2481403D283C9367007E8381 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 			children = (
 				24F4686E283ED25100C7D876 /* ServerStatusView.swift */,
 				24F46870283ED39F00C7D876 /* ServerStatusItem.swift */,
+				241F7A2028507B9E0098C274 /* ServerStatusItemModel.swift */,
 				248C347D28486EA80042FB89 /* ServerIOStatusItem.swift */,
 			);
 			path = ServerStatus;
@@ -509,6 +512,7 @@
 				24814083283D283E007E8381 /* ServerCreateView.swift in Sources */,
 				24F46866283E926800C7D876 /* FlipView.swift in Sources */,
 				24F46858283DB81000C7D876 /* TemperatureType.swift in Sources */,
+				241F7A2128507B9E0098C274 /* ServerStatusItemModel.swift in Sources */,
 				24F4687E2841440100C7D876 /* PulsatingView.swift in Sources */,
 				2481407E283CA508007E8381 /* ServerView.swift in Sources */,
 				24F4688028451BD900C7D876 /* Network.swift in Sources */,

@@ -21,11 +21,19 @@ struct ServerConfigListView: View {
     
     @Environment(\.managedObjectContext) private var managedObjectContext
     
-    fileprivate func deleteProject(_ indexSet: IndexSet) {
+    private func deleteServer(with indexSet: IndexSet) {
         for index in indexSet {
             managedObjectContext.delete(servers[index])
         }
         try? managedObjectContext.save()
+    }
+    
+    private func moveServer(offSet: IndexSet, destination: Int) {
+        
+    }
+    
+    private func onDrag() -> NSItemProvider {
+        return NSItemProvider()
     }
     
     var body: some View {
@@ -49,16 +57,11 @@ struct ServerConfigListView: View {
                         } label: {
                             ServerViewItem(server: server)
                         }
+                        .id("\(server.name)\(server.user)\(server.host)")
                     }
-                    .onDelete { indexSet in
-                        deleteProject(indexSet)
-                    }
-                    .onMove { offSet, destination in
-                        
-                    }
-                    .onDrag {
-                        NSItemProvider()
-                    }
+                    .onDelete(perform: deleteServer(with:))
+                    .onMove(perform: moveServer(offSet:destination:))
+                    .onDrag(onDrag)
                 }
             }
             .navigationTitle("Servers")

@@ -26,6 +26,8 @@ struct StatusRing: View {
                 .stroke(style: StrokeStyle(lineWidth: ringWidth, lineCap: .round))
                 .fill(ringColor)
         }
+        .animation(.spring(), value: percent)
+        .animation(.spring(), value: ringColor)
     }
 }
 

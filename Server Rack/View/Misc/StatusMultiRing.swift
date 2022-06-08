@@ -47,6 +47,8 @@ struct StatusMultiRing: View {
                 )
                 .frame(width: geometry.size.width - ringSpaceOffSet - ringSpaceOffSet, height: geometry.size.height - ringSpaceOffSet - ringSpaceOffSet)
             }
+            .animation(.spring(), value: percent)
+            .animation(.spring(), value: ringColor)
         }
     }
 }

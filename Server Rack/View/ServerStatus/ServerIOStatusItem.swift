@@ -78,6 +78,8 @@ struct ServerIOStatusItem: View {
             
             Spacer()
         }
+        .animation(.spring(), value: topValue)
+        .animation(.spring(), value: bottomValue)
     }
 }
 

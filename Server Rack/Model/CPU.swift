@@ -30,6 +30,10 @@ class CPU: ObservableObject {
         }
     }
     
+    var cpuPercentage: CGFloat {
+        return idle == -1 ? 0.001 : 100.0 - idle
+    }
+    
     init() {}
     
     init(

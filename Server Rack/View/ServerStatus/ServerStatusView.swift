@@ -87,6 +87,7 @@ struct ServerStatusView: View {
                     }
                     .padding(.horizontal)
                 }
+                .padding(.bottom, 20)
             }
             .navigationTitle("Status")
             .toolbar {}

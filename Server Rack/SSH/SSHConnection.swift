@@ -21,10 +21,11 @@ class SSHConnection: SSHConnectionProtocol {
     
     init(_ server: Server) {
         self.server = server
+        print("SSHConnection - Initialized")
     }
     
     deinit {
-        print("Deinited - SSHConnection")
+        print("SSHConnection - Dinitialized")
     }
     
     func send(command: String) async throws -> String? {

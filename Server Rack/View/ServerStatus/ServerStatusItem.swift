@@ -9,15 +9,21 @@ import SwiftUI
 
 struct ServerStatusItem: View {
     
-    @State private var timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
-    @AppStorage("temperature") private var temperatureType: TemperatureType = .fahrenheit
+    @AppStorage("temperature") fileprivate var temperatureType: TemperatureType = .fahrenheit
     
     @AppStorage("displaygrid") private var displayGridType: DisplayGridType = .stack
     
     @StateObject private var viewModel: ViewModel
     
+    @State private var connected = false
+    
     private var server: Server
+    
+    var cached: Bool {
+        return !viewModel.loaded
+    }
 
     init(server: Server) {
         self.server = server
@@ -66,81 +72,43 @@ struct ServerStatusItem: View {
 }
 
 extension ServerStatusItem {
-    var gridLayout: some View {
-        VStack(spacing: 12) {
-            HStack {
-                Text(server.name)
-                    .bold()
-                    .font(.headline)
-                    .lineLimit(1)
-                
-                Spacer()
-                
-                HStack(spacing: 15) {
-                    if viewModel.loaded || !viewModel.cacheEmpty {
-                        Group {
-                            switch temperatureType {
-                            case .fahrenheit:
-                                Text("\(viewModel.cpu.fahrenheit)°F")
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            case .celsius:
-                                Text("\(viewModel.cpu.celsius)°C")
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    } else {
-                        PulsatingView()
-                            .frame(width: 20, height: 20, alignment: .center)
-                            .onAppear {
-                                print(viewModel.cacheEmpty)
-                            }
-                    }
-                }
-            }
+    var head: some View {
+        HStack {
+            Text(server.name)
+                .bold()
+                .font(.headline)
             
-            FlipView {
-                VStack(spacing: 12) {
-                    StatusMultiRing(
-                        percent: viewModel.cpuLoad,
-                        startAngle: -90,
-                        ringWidth: 5,
-                        ringSpaceOffSet: 12,
-                        ringColor: .green
-                    )
-                    .frame(width: 55, height: 55, alignment: .center)
-                    Text("Load")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            } backView: {
-                VStack(spacing: 12) {
-                    ZStack {
-                        StatusRing(
-                            percent: viewModel.cpuPercentage,
-                            startAngle: -90,
-                            ringWidth: 7,
-                            ringColor: .green,
-                            backgroundColor: Color(.systemGray4),
-                            drawnClockwise: false
-                        )
-                        
-                        Group {
-                            if viewModel.cpuIdle == -1 {
-                                Text("%")
-                            } else {
-                                Text("\(Int8(100.0 - viewModel.cpuIdle))%")
-                            }
-                        }
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+            Spacer()
+            
+            HStack(spacing: 15) {
+                if viewModel.loaded || !viewModel.cacheEmpty {
+                    switch temperatureType {
+                    case .fahrenheit:
+                        Text("\(viewModel.cpu.fahrenheit(cached: !viewModel.loaded))°F")
+                            .font(.system(.caption, design: .monospaced))
+                            .foregroundColor(.secondary)
+                    case .celsius:
+                        Text("\(viewModel.cpu.celsius(cached: !viewModel.loaded))°C")
+                            .font(.system(.caption, design: .monospaced))
+                            .foregroundColor(.secondary)
                     }
-                    .frame(width: 55, height: 55, alignment: .center)
-                    
-                    Text("CPU")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                } else {
+                    PulsatingView()
+                        .frame(width: 20, height: 20, alignment: .center)
+                }
+                
+                Button {
+                    temperatureType = .fahrenheit
+                } label: {
+                    Image(systemName: "square.3.stack.3d")
+                        .foregroundColor(.accentColor)
+                }
+                
+                Button {
+                    temperatureType = .celsius
+                } label: {
+                    Image(systemName: "terminal")
+                        .foregroundColor(.accentColor)
                 }
             }
         }
@@ -151,11 +119,15 @@ extension ServerStatusItem {
             head
                 .padding(.bottom, 8)
             
+//            ForEach(viewModel.cpu.load(cached: cached), id: \.self) { load in
+//                Text("\(load)")
+//            }
+            
             HStack {
                 FlipView {
                     VStack(spacing: 12) {
                         StatusMultiRing(
-                            percent: viewModel.cpuLoad,
+                            percent: viewModel.cpu.load(cached: cached),
                             startAngle: -90,
                             ringWidth: 5,
                             ringSpaceOffSet: 12,
@@ -168,9 +140,11 @@ extension ServerStatusItem {
                     }
                 } backView: {
                     VStack(spacing: 12) {
+                        let totalIdleUsage = viewModel.cpu.totalIdleUsage(cached: cached)
+                        let totalUsage = totalIdleUsage == -1 ? 0.001 : 100.0 - totalIdleUsage
                         ZStack {
                             StatusRing(
-                                percent: viewModel.cpuPercentage,
+                                percent: totalUsage,
                                 startAngle: -90,
                                 ringWidth: 7,
                                 ringColor: .green,
@@ -180,11 +154,7 @@ extension ServerStatusItem {
                             
                             
                             Group {
-                                if viewModel.cpuIdle == -1 {
-                                    Text("%")
-                                } else {
-                                    Text("\(Int8(100.0 - viewModel.cpuIdle))%")
-                                }
+                                Text("\(Int8(totalUsage))%")
                             }
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -202,8 +172,9 @@ extension ServerStatusItem {
                 FlipView {
                     VStack(spacing: 12) {
                         ZStack {
+                            let memoryPercentageUsed = viewModel.memory.memoryPercentageUsed(cached: cached)
                             StatusRing(
-                                percent: viewModel.memoryUsed,
+                                percent: memoryPercentageUsed,
                                 startAngle: -90,
                                 ringWidth: 7,
                                 ringColor: .green,
@@ -212,10 +183,10 @@ extension ServerStatusItem {
                             )
                             
                             Group {
-                                if viewModel.memoryUsed == 0.001 {
+                                if memoryPercentageUsed == 0.001 {
                                     Text("%")
                                 } else {
-                                    Text("\(Int8(viewModel.memoryUsed))%")
+                                    Text("\(Int(memoryPercentageUsed))%")
                                 }
                             }
                             .font(.caption)
@@ -232,7 +203,7 @@ extension ServerStatusItem {
                     VStack(spacing: 12) {
                         ZStack {
                             StatusRing(
-                                percent: viewModel.swapUsed,
+                                percent: viewModel.swapPercentageUsed,
                                 startAngle: -90,
                                 ringWidth: 7,
                                 ringColor: .green,
@@ -241,10 +212,10 @@ extension ServerStatusItem {
                             )
                             
                             Group {
-                                if viewModel.swapUsed == 0.001 {
+                                if viewModel.swapPercentageUsed == 0.001 {
                                     Text("%")
                                 } else {
-                                    Text("\(Int8(viewModel.swapUsed))%")
+                                    Text("\(Int8(viewModel.swapPercentageUsed))%")
                                 }
                             }
                             .font(.caption)
@@ -380,43 +351,81 @@ extension ServerStatusItem {
         }
     }
     
-    var head: some View {
-        HStack {
-            Text(server.name)
-                .bold()
-                .font(.headline)
-            
-            Spacer()
-            
-            HStack(spacing: 15) {
-                if viewModel.loaded || !viewModel.cacheEmpty {
-                    switch temperatureType {
-                    case .fahrenheit:
-                        Text("\(viewModel.fahrenheit)°F")
-                            .font(.system(.caption, design: .monospaced))
-                            .foregroundColor(.secondary)
-                    case .celsius:
-                        Text("\(viewModel.celsius)°C")
-                            .font(.system(.caption, design: .monospaced))
-                            .foregroundColor(.secondary)
+    var gridLayout: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text(server.name)
+                    .bold()
+                    .font(.headline)
+                    .lineLimit(1)
+                
+                Spacer()
+                
+                HStack(spacing: 15) {
+                    if viewModel.loaded || !viewModel.cacheEmpty {
+                        Group {
+                            switch temperatureType {
+                            case .fahrenheit:
+                                Text("\(viewModel.cpu.fahrenheit(cached: !viewModel.loaded))°F")
+                                    .font(.system(.caption, design: .monospaced))
+                                    .foregroundColor(.secondary)
+                            case .celsius:
+                                Text("\(viewModel.cpu.celsius(cached: !viewModel.loaded))°C")
+                                    .font(.system(.caption, design: .monospaced))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    } else {
+                        PulsatingView()
+                            .frame(width: 20, height: 20, alignment: .center)
+                            .onAppear {
+                                print(viewModel.cacheEmpty)
+                            }
                     }
-                } else {
-                    PulsatingView()
-                        .frame(width: 20, height: 20, alignment: .center)
                 }
-                
-                Button {
-                    temperatureType = .fahrenheit
-                } label: {
-                    Image(systemName: "square.3.stack.3d")
-                        .foregroundColor(.accentColor)
+            }
+            
+            FlipView {
+                VStack(spacing: 12) {
+                    StatusMultiRing(
+                        percent: viewModel.cpuLoad,
+                        startAngle: -90,
+                        ringWidth: 5,
+                        ringSpaceOffSet: 12,
+                        ringColor: .green
+                    )
+                    .frame(width: 55, height: 55, alignment: .center)
+                    Text("Load")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
-                
-                Button {
-                    temperatureType = .celsius
-                } label: {
-                    Image(systemName: "terminal")
-                        .foregroundColor(.accentColor)
+            } backView: {
+                VStack(spacing: 12) {
+                    ZStack {
+                        StatusRing(
+                            percent: viewModel.cpuPercentage,
+                            startAngle: -90,
+                            ringWidth: 7,
+                            ringColor: .green,
+                            backgroundColor: Color(.systemGray4),
+                            drawnClockwise: false
+                        )
+                        
+                        Group {
+                            if viewModel.cpuIdle == -1 {
+                                Text("%")
+                            } else {
+                                Text("\(Int8(100.0 - viewModel.cpuIdle))%")
+                            }
+                        }
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    }
+                    .frame(width: 55, height: 55, alignment: .center)
+                    
+                    Text("CPU")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
         }

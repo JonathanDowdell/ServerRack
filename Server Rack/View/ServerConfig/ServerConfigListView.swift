@@ -40,7 +40,7 @@ struct ServerConfigListView: View {
         NavigationView {
             List {
                 NavigationLink("Settings") {
-                    EmptyView()
+                    ServerSettingView()
                 }
                 .foregroundColor(.accentColor)
                 
@@ -55,7 +55,7 @@ struct ServerConfigListView: View {
                         NavigationLink {
                             ServerConfigView(server: server)
                         } label: {
-                            ServerViewItem(server: server)
+                            ServerConfigItem(server: server)
                         }
                         .id("\(server.name)\(server.user)\(server.host)")
                     }

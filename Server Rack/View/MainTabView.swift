@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct MainTabView: View {
+    
+    @AppStorage("themecolor") private var themeColor: ThemeColor = .blue
+    
     var body: some View {
         TabView {
             ServerStatusView()

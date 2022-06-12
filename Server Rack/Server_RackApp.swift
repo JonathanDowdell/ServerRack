@@ -10,12 +10,15 @@ import SwiftUI
 @main
 struct Server_RackApp: App {
     let persistenceController = PersistenceController.shared
-
+    
+    @AppStorage("coloringscheme") private var coloringScheme: ColoringScheme = .auto
+    
     var body: some Scene {
         WindowGroup {
             MainTabView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(ServerCache.shared)
+                .preferredColorScheme(coloringScheme.scheme)
         }
     }
 }

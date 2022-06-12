@@ -7,18 +7,27 @@
 
 import SwiftUI
 
+protocol ServerProtocol: ObservableObject {
+    var cpu: CPU { get set }
+    var memory: Memory { get set }
+    var swap: Swap { get set }
+    var network: Network { get set }
+    var storage: Storage { get set }
+    var loaded: Bool { get set }
+}
+
 extension ServerStatusItem {
-    class ViewModel: ObservableObject {
+    class ViewModel: ServerProtocol {
         
-        @Published var cpu = CPU()
+        @Published var cpu: CPU
         
-        @Published var memory = Memory()
+        @Published var memory: Memory
         
-        @Published var swap = Swap()
+        @Published var swap: Swap
         
-        @Published var network = Network()
+        @Published var network: Network
         
-        @Published var storage = Storage()
+        @Published var storage: Storage
         
         @Published var loaded = false
         
@@ -61,13 +70,14 @@ extension ServerStatusItem {
         }
 
         var cpuIdle: CGFloat {
+            guard cpu.cores.count != 0 else { return -1 }
             if loaded {
-                return cpu.idle
+                return (cpu.cores.map { $0.idle }.reduce(0, +)) / Double(cpu.cores.count)
             } else {
                 // Get Cached
                 let id = server.id.uuidString
-                let value = (serverCache.cache[id]?["idle"] as? CGFloat) ?? -1
-                return value
+                let cores = (serverCache.cache[id]?["cores"] as? [Core] ?? .init())
+                return (cores.map { $0.idle }.reduce(0, +)) / Double(cpu.cores.count)
             }
         }
 
@@ -75,10 +85,10 @@ extension ServerStatusItem {
             let idle = cpuIdle
             return idle == -1 ? 0.001 : 100.0 - idle
         }
-
+        
         var memoryUsed: CGFloat {
             if loaded {
-                return memory.memoryUsed
+                return memory.used
             } else {
                 // Get Cached
                 let id = server.id.uuidString
@@ -87,13 +97,13 @@ extension ServerStatusItem {
             }
         }
 
-        var swapUsed: CGFloat {
+        var swapPercentageUsed: CGFloat {
             if loaded {
-                return swap.swapUsed
+                return swap.swapPercentageUsed
             } else {
                 // Get Cached
                 let id = server.id.uuidString
-                let value = (serverCache.cache[id]?["swapUsed"] as? CGFloat) ?? 0.001
+                let value = (serverCache.cache[id]?["swapPercentageUsed"] as? CGFloat) ?? 0.001
                 return value
             }
         }
@@ -148,6 +158,11 @@ extension ServerStatusItem {
             self.server = server
             self.sshConnection = SSHConnection(server)
             self.serverCache = ServerCache.shared
+            self.cpu = CPU(self.sshConnection)
+            self.memory = Memory(self.sshConnection)
+            self.swap = Swap(self.sshConnection)
+            self.network = Network(self.sshConnection)
+            self.storage = Storage(self.sshConnection)
             print("ServerStatusItem - \(server.name) - Initialized")
         }
         
@@ -169,37 +184,18 @@ extension ServerStatusItem {
         
         func getServerData() {
             Task {
-                let rawCpuRowData = (try? await self.sshConnection.send(command: Commands.TopCPU.rawValue) ?? "") ?? ""
-                let rawTopRowData = (try? await self.sshConnection.send(command: Commands.TopTop.rawValue) ?? "") ?? ""
-                let temperatureData = (try? await self.sshConnection.send(command: Commands.SysHwmonTemp.rawValue) ?? "") ?? ""
-                let rawMemRowData = (try? await self.sshConnection.send(command: Commands.TopMem.rawValue) ?? "") ?? ""
-                let rawSwapRowData = (try? await self.sshConnection.send(command: Commands.TopSwap.rawValue) ?? "") ?? ""
-
-                let rawNetworkData = (try? await self.sshConnection.send(command: Commands.ProcNetDev.rawValue.replacingOccurrences(of: "\\", with: "")) ?? "") ?? ""
-
-                let rawProcDiskStatsData = ((try? await self.sshConnection.send(command: Commands.ProcDiskStats.rawValue) ?? "")) ?? ""
-
-                let rawDiskFreeData = ((try? await self.sshConnection.send(command: Commands.DiskFree.rawValue.replacingOccurrences(of: "\\", with: "")) ?? "")) ?? ""
+                await cpu.update()
+                await memory.update()
+                await swap.update()
+                await network.update()
+                await storage.update()
                 
                 
                 await MainActor.run {
                     loaded = true
-                    cpu.update(rawCPURow: rawCpuRowData, rawTopRow: rawTopRowData, temperatureData: temperatureData)
-                    cpu.cache(id: server.id)
-                    
-                    memory.update(rawMemRow: rawMemRowData)
-                    memory.cache(id: server.id)
-                    
-                    swap.update(rawSwapRow: rawSwapRowData)
-                    swap.cache(id: server.id)
-                    
-                    network.update(rawNetworkData: rawNetworkData)
-                    network.cache(id: server.id)
-                    
-                    storage.update(rawDiskFreeData: rawDiskFreeData, rawProcDiskStatsData: rawProcDiskStatsData)
-                    storage.cache(id: server.id)
                 }
             }
         }
+        
     }
 }

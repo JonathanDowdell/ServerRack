@@ -7,20 +7,59 @@
 
 import SwiftUI
 
-class CPU: ObservableObject {
+struct CPU {
     
-    @Published var load: [CGFloat] = [0.001,0.001,0.001]
-    @Published var idle: CGFloat = -1
-    @Published var temperature: CGFloat = 0.0
-    @Published var system: CGFloat = 0.0
-    @Published var nice: CGFloat = 0.0
-    @Published var iowait: CGFloat = 0.0
-    @Published var steal: CGFloat = 0.0
+    // MARK: Temperature
+    var temperature: CGFloat = 0.0
     
+    func temperature(cached: Bool) -> CGFloat {
+        if !cached {
+            return self.temperature
+        } else {
+            // Get Cached
+            guard
+                let id = sshConnection?.server.id.uuidString,
+                let temperature = serverCache.cache[id]?["temperature"] as? CGFloat
+            else { return 0 }
+            return temperature
+        }
+    }
+    
+    // MARK: Load
+    var load: [CGFloat] = [0.001,0.001,0.001]
+    
+    func load(cached: Bool) -> [CGFloat] {
+        if !cached {
+            return self.load
+        } else {
+            // Get Cached
+            guard
+                let id = sshConnection?.server.id.uuidString,
+                let load = serverCache.cache[id]?["load"] as? [CGFloat]
+            else { return [0.007,0.007,0.007] }
+            return load
+        }
+    }
+    
+    // MARK: Celsius
     var celsius: Int {
         return Int((Double(temperature) ) * 0.001)
     }
     
+    func celsius(cached: Bool) -> Int {
+        if !cached {
+            return self.fahrenheit
+        } else {
+            // Get Cached
+            guard
+                let id = sshConnection?.server.id.uuidString,
+                let celsius = serverCache.cache[id]?["celsius"] as? Int
+            else { return 0 }
+            return celsius
+        }
+    }
+    
+    // MARK: Fahrenheit
     var fahrenheit: Int {
         let celsius = self.celsius
         if celsius == 0 {
@@ -30,54 +69,112 @@ class CPU: ObservableObject {
         }
     }
     
-    var cpuPercentage: CGFloat {
-        return idle == -1 ? 0.001 : 100.0 - idle
+    func fahrenheit(cached: Bool) -> Int {
+        if !cached {
+            return fahrenheit
+        } else {
+            // Get Cached
+            guard
+                let id = sshConnection?.server.id.uuidString,
+                let fahrenheit = serverCache.cache[id]?["fahrenheit"] as? Int
+            else { return 0 }
+            return fahrenheit
+        }
+    }
+    
+    // MARK: Cores
+    var cores: [Core] = .init()
+    
+    func cores(cached: Bool) -> [Core] {
+        if !cached {
+            return self.cores
+        } else {
+            // Get Cached
+            guard
+                let id = sshConnection?.server.id.uuidString,
+                let cores = serverCache.cache[id]?["cores"] as? [Core]
+            else { return .init() }
+            return cores
+        }
+    }
+    
+    func totalSystemUsage(cached: Bool) -> CGFloat {
+        let cores = cores(cached: cached)
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.system }.reduce(0, +) / Double(cores.count)
+    }
+    
+    func totalUserUsage(cached: Bool) -> CGFloat {
+        let cores = cores(cached: cached)
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.user }.reduce(0, +) / Double(cores.count)
+    }
+    
+    func totalIOWaitUsage(cached: Bool) -> CGFloat {
+        let cores = cores(cached: cached)
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.iowait }.reduce(0, +) / Double(cores.count)
+    }
+    
+    func totalStealUsage(cached: Bool) -> CGFloat {
+        let cores = cores(cached: cached)
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.steal }.reduce(0, +) / Double(cores.count)
+    }
+    
+    func totalIdleUsage(cached: Bool) -> CGFloat {
+        let cores = cores(cached: cached)
+        guard cores.count != 0 else { return -1 }
+        return cores.map { $0.idle }.reduce(0, +) / Double(cores.count)
+    }
+    
+    private weak var sshConnection: SSHConnection?
+    
+    private var serverCache: ServerCache {
+        return ServerCache.shared
+    }
+    
+    init(_ sshConnection: SSHConnection) {
+        self.sshConnection = sshConnection
     }
     
     init() {}
     
-    init(
-        rawCPURow: String,
-        rawTopRow: String,
-        temperatureData: String
-    ) {
-        update(
-            rawCPURow: rawCPURow,
-            rawTopRow: rawTopRow,
-            temperatureData: temperatureData
-        )
-    }
     
-    func update(
-        rawCPURow: String,
+    
+    mutating func update(
+        rawCpuCoreData: String,
         rawTopRow: String,
         temperatureData: String
     ) {
-        let cleanedCPUData = removeWhiteSpaceAndNewLines(rawCPURow)
+        let cleanedCPUCoreData = removeWhiteSpaceAndNewLines(rawCpuCoreData)
         let cleanedRawTopRow = removeWhiteSpaceAndNewLines(rawTopRow)
-        self.idle = parseIdleData(cleanedCPUData)
+        
+        self.cores = parseCpuCoreData(cleanedCPUCoreData)
         self.load = parseLoadData(cleanedRawTopRow)
         self.temperature = parseTemperatureData(temperatureData)
-        self.system = parseSystemData(cleanedCPUData)
-        self.nice = parseNiceData(cleanedCPUData)
-        self.iowait = parseIoWaitData(cleanedCPUData)
-        self.steal = parseStealData(cleanedCPUData)
+    }
+    
+    @MainActor
+    mutating func update() async {
+        guard let sshConnection = sshConnection else { return }
+        let rawCpuCoreData = (try? await sshConnection.send(command: Commands.TopCPUCore.rawValue) ?? "") ?? ""
+        let rawTopRowData = (try? await sshConnection.send(command: Commands.TopTop.rawValue) ?? "") ?? ""
+        let temperatureData = (try? await sshConnection.send(command: Commands.SysHwmonTemp.rawValue) ?? "") ?? ""
+        let id = sshConnection.server.id
+        update(rawCpuCoreData: rawCpuCoreData, rawTopRow: rawTopRowData, temperatureData: temperatureData)
+        cache(id: id)
     }
     
     func cache(id: UUID) {
-        if ServerCache.shared.cache[id.uuidString] == nil {
-            ServerCache.shared.cache[id.uuidString] = .init()
-        }
+        var cacheDict: [String: Any] = .init()
+        cacheDict["load"] = self.load
+        cacheDict["temperature"] = self.temperature
+        cacheDict["celsius"] = self.celsius
+        cacheDict["fahrenheit"] = self.fahrenheit
+        cacheDict["cores"] = self.cores
         
-        ServerCache.shared.cache[id.uuidString]?["idle"] = self.idle
-        ServerCache.shared.cache[id.uuidString]?["load"] = self.load
-        ServerCache.shared.cache[id.uuidString]?["temperature"] = self.temperature
-        ServerCache.shared.cache[id.uuidString]?["celsius"] = self.celsius
-        ServerCache.shared.cache[id.uuidString]?["fahrenheit"] = self.fahrenheit
-        ServerCache.shared.cache[id.uuidString]?["system"] = self.system
-        ServerCache.shared.cache[id.uuidString]?["nice"] = self.nice
-        ServerCache.shared.cache[id.uuidString]?["iowait"] = self.iowait
-        ServerCache.shared.cache[id.uuidString]?["steal"] = self.steal
+        serverCache.cache[id.uuidString] = cacheDict
     }
     
     private func removeWhiteSpaceAndNewLines(_ data: String) -> String {
@@ -85,6 +182,48 @@ class CPU: ObservableObject {
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .lowercased()
             .replacingOccurrences(of: " ", with: "")
+    }
+    
+    private func parseCpuCoreData(_ data: String) -> [Core] {
+        let data = data.components(separatedBy: "%").filter { !$0.isEmpty }
+        return data.compactMap {
+            guard
+                let rawCoreData = $0.matchingStrings(regex: "^cpu\\d").first?.first,
+                let coreNumber = Int(rawCoreData.trimmingCharacters(in: .letters))
+            else { return nil }
+            var core = Core(coreNumber)
+            if let rawUser = $0.matchingStrings(regex: "(\\d+\\.\\dus)").first?.first?.trimmingCharacters(in: .letters),
+               let user = Double(rawUser) {
+                core.user = user
+            }
+            
+            if let rawSystem = $0.matchingStrings(regex: "(\\d+\\.\\dsy)").first?.first?.trimmingCharacters(in: .letters),
+               let system = Double(rawSystem) {
+                core.system = system
+            }
+            
+            if let rawNice = $0.matchingStrings(regex: "(\\d+\\.\\dni)").first?.first?.trimmingCharacters(in: .letters),
+               let nice = Double(rawNice) {
+                core.nice = nice
+            }
+            
+            if let rawIdle = $0.matchingStrings(regex: "(\\d+\\.\\did)").first?.first?.trimmingCharacters(in: .letters),
+               let idle = Double(rawIdle) {
+                core.idle = idle
+            }
+            
+            if let rawIowait = $0.matchingStrings(regex: "(\\d+\\.\\dwa)").first?.first?.trimmingCharacters(in: .letters),
+               let iowait = Double(rawIowait) {
+                core.iowait = iowait
+            }
+            
+            if let rawSteal = $0.matchingStrings(regex: "(\\d+\\.\\dst)").first?.first?.trimmingCharacters(in: .letters),
+               let steal = Double(rawSteal){
+                core.steal = steal
+            }
+            
+            return core
+        }
     }
     
     private func parseTemperatureData(_ data: String) -> CGFloat {

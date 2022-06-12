@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TemperatureType: Int {
+enum TemperatureType: Int, CaseIterable {
     case fahrenheit = 0
     case celsius = 1
     
@@ -19,12 +19,12 @@ enum TemperatureType: Int {
         }
     }
     
-    var name: String {
+    var text: String {
         switch self {
         case .fahrenheit:
-            return "fahrenheit"
+            return "Fahrenheit"
         case .celsius:
-            return "celsius"
+            return "Celsius"
         }
     }
 }

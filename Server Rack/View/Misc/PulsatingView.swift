@@ -30,7 +30,7 @@ struct PulsatingView: View {
                         .frame(width: max(0.01, proxy.size.width - 10 - 15 - 8.75), height: max(0.01, proxy.size.height - 10 - 15 - 8.75))
                 }
                 .onAppear {
-                    withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: true)) {
+                    withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
                         self.animate.toggle()
                     }
                 }

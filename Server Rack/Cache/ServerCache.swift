@@ -11,6 +11,8 @@ class ServerCache: ObservableObject {
     
     static let shared = ServerCache()
     
-    @Published var cache: [String: [String: Any]] = .init()
+    var cache: [String: [String: Any]] = .init()
+    
+    var nsCache: NSCache<NSString, NSObject> = .init()
     
 }

@@ -22,8 +22,6 @@ struct ServerStatusView: View {
     
     @State private var shouldPresentServerDetailView = false
     
-    @StateObject private var sshContoller: SSHController = .init()
-    
     @AppStorage("displaygrid") private var displayGridType: DisplayGridType = .stack
     
     private var columns: [GridItem] {
@@ -48,7 +46,9 @@ struct ServerStatusView: View {
             ScrollView {
                 ZStack {
                     NavigationLink("", isActive: $shouldPresentServerDetailView) {
-                        EmptyView()
+                        if let selectedServer = selectedServer {
+                            ServerStatusDetailView(server: selectedServer)
+                        }
                     }
                     LazyVGrid(columns: columns, spacing: 16) {
                         Section {
@@ -58,7 +58,6 @@ struct ServerStatusView: View {
                                     shouldPresentServerDetailView = true
                                 } label: {
                                     ServerStatusItem(server: server)
-                                        .environmentObject(sshContoller)
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -93,6 +92,9 @@ struct ServerStatusView: View {
             .toolbar {}
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .onAppear {
+            print(UIScreen.screenWidth * 0.094)
+        }
     }
 }
 

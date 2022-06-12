@@ -7,11 +7,11 @@
 
 import Foundation
 
-class Storage: ObservableObject {
+struct Storage {
     
-    @Published var devices: [StorageDevice] = .init()
+    var devices: [StorageDevice] = .init()
     
-    @Published var deviceIOs: [DeviceIO] = .init()
+    var deviceIOs: [DeviceIO] = .init()
     
     /// Total Reads - MB
     var totalReads: Double {
@@ -25,14 +25,31 @@ class Storage: ObservableObject {
         return Double(value) / 2048.0
     }
     
+    private weak var sshConnection: SSHConnection?
+    
+    init(_ sshConnection: SSHConnection) {
+        self.sshConnection = sshConnection
+    }
+    
     init() {}
     
-    func update(rawDiskFreeData: String, rawProcDiskStatsData: String) {
+    mutating func update(rawDiskFreeData: String, rawProcDiskStatsData: String) {
         // Clean Data
         let diskFreeDataArray = cleanRawDiskFreeData(rawDiskFreeData)
         let procDiskStatsArray = cleanRawProcDiskStatsData(rawProcDiskStatsData)
         self.devices = parseDiskFreeDataArray(diskFreeDataArray)
         self.deviceIOs = parseProcDiskStatsArray(procDiskStatsArray)
+    }
+    
+    @MainActor
+    mutating func update() async {
+        guard let sshConnection = sshConnection else { return }
+        let rawDiskFreeData = ((try? await sshConnection.send(command: Commands.DiskFree.rawValue.replacingOccurrences(of: "\\", with: "")) ?? "")) ?? ""
+        let rawProcDiskStatsData = ((try? await sshConnection.send(command: Commands.ProcDiskStats.rawValue) ?? "")) ?? ""
+        let id = sshConnection.server.id
+        
+        update(rawDiskFreeData: rawDiskFreeData, rawProcDiskStatsData: rawProcDiskStatsData)
+        cache(id: id)
     }
     
     func cache(id: UUID) {

@@ -7,9 +7,9 @@
 
 import Foundation
 
-class Network: ObservableObject {
+struct Network {
     
-    @Published var devices: [NetworkDevice] = .init()
+    var devices: [NetworkDevice] = .init()
     
     /// Total Uploaded by Server - MB
     var up: Double {
@@ -23,12 +23,15 @@ class Network: ObservableObject {
         return Double(value) / 1048576
     }
     
+    private weak var sshConnection: SSHConnection?
+    
+    init(_ sshConnection: SSHConnection) {
+        self.sshConnection = sshConnection
+    }
     
     init() {}
     
-    init(rawData: String) { update(rawNetworkData: rawData) }
-    
-    func update(rawNetworkData: String) {
+    mutating func update(rawNetworkData: String) {
         let resultsArray = rawNetworkData.components(separatedBy: "split")
         
         self.devices = resultsArray.compactMap { item in
@@ -48,7 +51,16 @@ class Network: ObservableObject {
             }
             return networkDevice
         }
+    }
+    
+    @MainActor
+    mutating func update() async {
+        guard let sshConnection = sshConnection else { return }
+        let rawNetworkData = (try? await sshConnection.send(command: Commands.ProcNetDev.rawValue.replacingOccurrences(of: "\\", with: "")) ?? "") ?? ""
+        let id = sshConnection.server.id
         
+        update(rawNetworkData: rawNetworkData)
+        cache(id: id)
     }
     
     func cache(id: UUID) {

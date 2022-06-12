@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-class Swap: ObservableObject {
-    @Published var total: CGFloat = 0.0
-    @Published var free: CGFloat = 0.0
-    @Published var used: CGFloat = 0.0
-    @Published var cache: CGFloat = 0.0
+struct Swap {
+    var total: CGFloat = 0.0
+    var free: CGFloat = 0.0
+    var used: CGFloat = 0.0
+    var cache: CGFloat = 0.0
     
-    var swapUsed: CGFloat {
+    var swapPercentageUsed: CGFloat {
         if total != 0 {
             return (used / total) * 1000
         } else {
@@ -21,19 +21,31 @@ class Swap: ObservableObject {
         }
     }
     
-    init() {}
+    private weak var sshConnection: SSHConnection?
     
-    init(rawSwapRow: String) {
-        update(rawSwapRow: rawSwapRow)
+    init(_ sshConnection: SSHConnection) {
+        self.sshConnection = sshConnection
     }
     
-    func update(rawSwapRow: String) {
+    init() {}
+    
+    mutating func update(rawSwapRow: String) {
         let cleanedSwapRow = removeWhiteSpaceAndNewLines(rawSwapRow)
         
         self.total = parseData(cleanedSwapRow, regex: "\\d*.\\d*total")
         self.free = parseData(cleanedSwapRow, regex: "\\d*.\\d*free")
         self.used = parseData(cleanedSwapRow, regex: "\\d*.\\d*used")
         self.cache = parseData(cleanedSwapRow, regex: "\\d*.\\d*avail")
+    }
+    
+    @MainActor
+    mutating func update() async {
+        guard let sshConnection = sshConnection else { return }
+        let rawSwapRowData = (try? await sshConnection.send(command: Commands.TopSwap.rawValue) ?? "") ?? ""
+        let id = sshConnection.server.id
+        
+        update(rawSwapRow: rawSwapRowData)
+        cache(id: id)
     }
     
     func cache(id: UUID) {
@@ -45,7 +57,7 @@ class Swap: ObservableObject {
         ServerCache.shared.cache[id.uuidString]?["free"] = self.free
         ServerCache.shared.cache[id.uuidString]?["used"] = self.used
         ServerCache.shared.cache[id.uuidString]?["cache"] = self.cache
-        ServerCache.shared.cache[id.uuidString]?["swapUsed"] = self.swapUsed
+        ServerCache.shared.cache[id.uuidString]?["swapPercentageUsed"] = self.swapPercentageUsed
     }
     
     private func removeWhiteSpaceAndNewLines(_ data: String) -> String {

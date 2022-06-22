@@ -18,6 +18,7 @@ struct Server_RackApp: App {
             MainTabView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .environmentObject(ServerCache.shared)
+                .environmentObject(SSHManager.shared)
                 .preferredColorScheme(coloringScheme.scheme)
         }
     }

@@ -17,15 +17,17 @@ struct ServerConfigListView: View {
         ]
     ) private var servers: FetchedResults<Server>
     
+    @EnvironmentObject var sshManager: SSHManager
+    
     @State private var presentServerConfigView = false
     
     @Environment(\.managedObjectContext) private var managedObjectContext
     
     private func deleteServer(with indexSet: IndexSet) {
         for index in indexSet {
-            managedObjectContext.delete(servers[index])
+            let server = servers[index]
+            sshManager.removeConnection(for: server)
         }
-        try? managedObjectContext.save()
     }
     
     private func moveServer(offSet: IndexSet, destination: Int) {
@@ -51,13 +53,13 @@ struct ServerConfigListView: View {
 
                 
                 Section("Servers") {
-                    ForEach(servers, id: \.self) { server in
+                    ForEach(sshManager.sshConnections, id: \.id) { wrapper in
                         NavigationLink {
-                            ServerConfigView(server: server)
+                            ServerConfigView(server: wrapper.connection.server)
                         } label: {
-                            ServerConfigItem(server: server)
+                            ServerConfigItem(server: wrapper.connection.server)
                         }
-                        .id("\(server.name)\(server.user)\(server.host)")
+                        .id("\(wrapper.connection.server.name)\(wrapper.connection.server.user)\(wrapper.connection.server.host)")
                     }
                     .onDelete(perform: deleteServer(with:))
                     .onMove(perform: moveServer(offSet:destination:))

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 /// Memory Data from Server
 struct Memory {
@@ -123,6 +124,92 @@ struct Memory {
         ServerCache.shared.cache[id.uuidString]?["memoryUsed"] = self.used
         ServerCache.shared.cache[id.uuidString]?["memoryCacheUsed"] = self.cache
         ServerCache.shared.cache[id.uuidString]?["memoryPercentageUsed"] = self.memoryPercentageUsed
+    }
+    
+    private func removeWhiteSpaceAndNewLines(_ data: String) -> String {
+        return data
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+            .replacingOccurrences(of: " ", with: "")
+    }
+    
+    private func parseData(_ data: String, regex: String) -> CGFloat {
+        guard
+            let array = data.matchingStrings(regex: regex).first,
+            let raw = array.first?.trimmingCharacters(in: .letters),
+            let data = Double(raw)
+        else { return 0.0 }
+        
+        return data
+    }
+    
+}
+
+/// Memory Data from Server
+class MEMORY {
+    /// Total installed memory - MiB
+    var total = CurrentValueSubject<CGFloat, Never>(0.0)
+    
+    /// Unused memory - MiB
+    var free = CurrentValueSubject<CGFloat, Never>(0.0)
+    
+    /// Used memory - MiB
+    var used = CurrentValueSubject<CGFloat, Never>(0.0)
+    
+    /// Memory used by the page cache and slabs - MiB
+    var cache = CurrentValueSubject<CGFloat, Never>(0.0)
+    
+    var memoryPercentageUsed: CGFloat {
+        let used = used.value
+        let total = total.value
+        guard !(total == 0.001 && used == 0.001) else { return 0.001 }
+        if total != 0 {
+            return (used / total) * 1000
+        } else {
+            return 0.001
+        }
+    }
+    
+    private weak var sshConnection: SSHConnection?
+    
+    private var cacheManager: NSCache<NSString, NSObject> {
+        return ServerCache.shared.nsCache
+    }
+    
+    init(_ sshConnection: SSHConnection) {
+        self.sshConnection = sshConnection
+    }
+    
+    init() {}
+    
+    init(rawMemRow: String) {
+        update(rawMemRow: rawMemRow)
+    }
+    
+    func update(rawMemRow: String) {
+        let cleanedMemData = removeWhiteSpaceAndNewLines(rawMemRow)
+        self.total.send(parseData(cleanedMemData, regex: "\\d*.\\d*total"))
+        self.free.send(parseData(cleanedMemData, regex: "\\d*.\\d*free"))
+        self.used.send(parseData(cleanedMemData, regex: "\\d*.\\d*used"))
+        self.cache.send(parseData(cleanedMemData, regex: "\\d*.\\d*buff"))
+    }
+    
+    @MainActor
+    func update() async {
+        guard let sshConnection = sshConnection else { return }
+        let rawMemRowData = (try? await sshConnection.send(command: Commands.TopMem.rawValue) ?? "") ?? ""
+        update(rawMemRow: rawMemRowData)
+    }
+    
+    func cache(id: UUID) {
+//        if ServerCache.shared.cache[id.uuidString] == nil {
+//            ServerCache.shared.cache[id.uuidString] = .init()
+//        }
+//        ServerCache.shared.cache[id.uuidString]?["memoryTotal"] = self.total
+//        ServerCache.shared.cache[id.uuidString]?["memoryFree"] = self.free
+//        ServerCache.shared.cache[id.uuidString]?["memoryUsed"] = self.used
+//        ServerCache.shared.cache[id.uuidString]?["memoryCacheUsed"] = self.cache
+//        ServerCache.shared.cache[id.uuidString]?["memoryPercentageUsed"] = self.memoryPercentageUsed
     }
     
     private func removeWhiteSpaceAndNewLines(_ data: String) -> String {

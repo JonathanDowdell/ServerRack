@@ -18,8 +18,8 @@ struct ServerConfigView: View {
     @FocusState private var focusedField: Field?
     
     @Environment(\.presentationMode) private var presentationMode
-    
-    @Environment(\.managedObjectContext) private var moc
+    @Environment(\.managedObjectContext) private var managedObjectContext
+    @EnvironmentObject private var sshManager: SSHManager
     
     var server: Server?
     
@@ -120,7 +120,7 @@ extension ServerConfigView {
             server.password = self.password
             server.show = self.showStatus
         } else {
-            let server = Server(context: moc)
+            let server = Server(context: managedObjectContext)
             server.id = UUID()
             server.name = self.name
             server.host = self.host
@@ -130,7 +130,8 @@ extension ServerConfigView {
             server.show = self.showStatus
         }
         
-        try? moc.save()
+        try? managedObjectContext.save()
+        sshManager.connectAll()
     }
 }
 

@@ -11,12 +11,14 @@
 		240B0881284F0B9900F8BA9C /* Server+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B087F284F0B9900F8BA9C /* Server+CoreDataProperties.swift */; };
 		240B0883284F1A5B00F8BA9C /* DisplayGridType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B0882284F1A5B00F8BA9C /* DisplayGridType.swift */; };
 		241F7A2128507B9E0098C274 /* ServerStatusItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A2028507B9E0098C274 /* ServerStatusItemModel.swift */; };
-		241F7A24285107E10098C274 /* ServerStatusDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A23285107E10098C274 /* ServerStatusDetailView.swift */; };
 		241F7A26285189220098C274 /* Core.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A25285189220098C274 /* Core.swift */; };
 		241F7A282852528F0098C274 /* CGFloat+etx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A272852528F0098C274 /* CGFloat+etx.swift */; };
 		241F7A2B28526C3F0098C274 /* ServerSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A2A28526C3F0098C274 /* ServerSettingView.swift */; };
 		241F7A2D285271E50098C274 /* ColoringScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A2C285271E50098C274 /* ColoringScheme.swift */; };
 		241F7A2F2854F0700098C274 /* CacheWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A2E2854F0700098C274 /* CacheWrapper.swift */; };
+		241F7A342856EDD10098C274 /* SSHManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A332856EDD10098C274 /* SSHManager.swift */; };
+		241F7A362857DB6E0098C274 /* ServerStatusDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A352857DB6E0098C274 /* ServerStatusDetailView.swift */; };
+		241F7A38285EAFFA0098C274 /* ServerStatusDetailMetric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F7A37285EAFFA0098C274 /* ServerStatusDetailMetric.swift */; };
 		2481403A283C9365007E8381 /* Server_RackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24814039283C9365007E8381 /* Server_RackApp.swift */; };
 		2481403E283C9367007E8381 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2481403D283C9367007E8381 /* Assets.xcassets */; };
 		24814041283C9367007E8381 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24814040283C9367007E8381 /* Preview Assets.xcassets */; };
@@ -81,12 +83,14 @@
 		240B087F284F0B9900F8BA9C /* Server+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Server+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		240B0882284F1A5B00F8BA9C /* DisplayGridType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayGridType.swift; sourceTree = "<group>"; };
 		241F7A2028507B9E0098C274 /* ServerStatusItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusItemModel.swift; sourceTree = "<group>"; };
-		241F7A23285107E10098C274 /* ServerStatusDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusDetailView.swift; sourceTree = "<group>"; };
 		241F7A25285189220098C274 /* Core.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core.swift; sourceTree = "<group>"; };
 		241F7A272852528F0098C274 /* CGFloat+etx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+etx.swift"; sourceTree = "<group>"; };
 		241F7A2A28526C3F0098C274 /* ServerSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettingView.swift; sourceTree = "<group>"; };
 		241F7A2C285271E50098C274 /* ColoringScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoringScheme.swift; sourceTree = "<group>"; };
 		241F7A2E2854F0700098C274 /* CacheWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheWrapper.swift; sourceTree = "<group>"; };
+		241F7A332856EDD10098C274 /* SSHManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHManager.swift; sourceTree = "<group>"; };
+		241F7A352857DB6E0098C274 /* ServerStatusDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusDetailView.swift; sourceTree = "<group>"; };
+		241F7A37285EAFFA0098C274 /* ServerStatusDetailMetric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusDetailMetric.swift; sourceTree = "<group>"; };
 		24814036283C9365007E8381 /* Server Rack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Server Rack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		24814039283C9365007E8381 /* Server_RackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server_RackApp.swift; sourceTree = "<group>"; };
 		2481403D283C9367007E8381 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -161,7 +165,8 @@
 		241F7A22285107C60098C274 /* ServerDetailStatus */ = {
 			isa = PBXGroup;
 			children = (
-				241F7A23285107E10098C274 /* ServerStatusDetailView.swift */,
+				241F7A352857DB6E0098C274 /* ServerStatusDetailView.swift */,
+				241F7A37285EAFFA0098C274 /* ServerStatusDetailMetric.swift */,
 			);
 			path = ServerDetailStatus;
 			sourceTree = "<group>";
@@ -356,6 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				24814073283C9F4F007E8381 /* SSHConnection.swift */,
+				241F7A332856EDD10098C274 /* SSHManager.swift */,
 			);
 			path = SSH;
 			sourceTree = "<group>";
@@ -526,6 +532,7 @@
 				240B0880284F0B9900F8BA9C /* Server+CoreDataClass.swift in Sources */,
 				24F46860283DD2D700C7D876 /* StatusRing.swift in Sources */,
 				241F7A2B28526C3F0098C274 /* ServerSettingView.swift in Sources */,
+				241F7A342856EDD10098C274 /* SSHManager.swift in Sources */,
 				241F7A282852528F0098C274 /* CGFloat+etx.swift in Sources */,
 				24F46877283F0C5000C7D876 /* CPU.swift in Sources */,
 				24F46866283E926800C7D876 /* FlipView.swift in Sources */,
@@ -540,10 +547,12 @@
 				241F7A2F2854F0700098C274 /* CacheWrapper.swift in Sources */,
 				24814043283C9367007E8381 /* Persistence.swift in Sources */,
 				24814081283CA8E3007E8381 /* ServerStorage.swift in Sources */,
+				241F7A362857DB6E0098C274 /* ServerStatusDetailView.swift in Sources */,
 				248C3483284878FD0042FB89 /* ServerConfigItem.swift in Sources */,
 				24F46873283EE07100C7D876 /* Commands.swift in Sources */,
 				24814098283D5C98007E8381 /* StatusItem.swift in Sources */,
 				241F7A2D285271E50098C274 /* ColoringScheme.swift in Sources */,
+				241F7A38285EAFFA0098C274 /* ServerStatusDetailMetric.swift in Sources */,
 				24F4685E283DD2B200C7D876 /* RingShape.swift in Sources */,
 				24814085283D2AF7007E8381 /* MainTabView.swift in Sources */,
 				2481403A283C9365007E8381 /* Server_RackApp.swift in Sources */,
@@ -558,7 +567,6 @@
 				24D263F2284B9DDF00A1A9E7 /* ServerCache.swift in Sources */,
 				248C3481284878610042FB89 /* ServerConfigListView.swift in Sources */,
 				24F4687B283F3E6000C7D876 /* Swap.swift in Sources */,
-				241F7A24285107E10098C274 /* ServerStatusDetailView.swift in Sources */,
 				2481406E283C942B007E8381 /* StatusView.swift in Sources */,
 				24F46879283F34E000C7D876 /* Memory.swift in Sources */,
 				240B0881284F0B9900F8BA9C /* Server+CoreDataProperties.swift in Sources */,

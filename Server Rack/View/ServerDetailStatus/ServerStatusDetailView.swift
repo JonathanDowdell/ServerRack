@@ -2,26 +2,191 @@
 //  ServerStatusDetailView.swift
 //  Server Rack
 //
-//  Created by Jonathan Dowdell on 6/8/22.
+//  Created by Jonathan Dowdell on 6/13/22.
 //
 
 import SwiftUI
 
-struct ServerStatusDetailView: View {
+class ServerStatusDetailViewModel: ObservableObject {
     
-    @StateObject private var viewModel: ViewModel
+    @Published var sshConnectionWrapper: SSHConnectionWrapper
     
-    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    let server: Server
     
-    private let server: Server
+    @Published var load: [CGFloat] = [0.01,0.01,0.01]
     
-    var cached: Bool {
-        return !viewModel.loaded
+    @Published var cores: [Core] = .init()
+    
+    var totalSystemUsage: CGFloat {
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.system }.reduce(0, +) / Double(cores.count)
     }
     
-    init(server: Server) {
-        self.server = server
-        self._viewModel = StateObject(wrappedValue: ViewModel(server: server))
+    var totalUserUsage: CGFloat {
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.user }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var totalIOWaitUsage: CGFloat {
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.iowait }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var totalStealUsage: CGFloat {
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.steal }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var totalIdleUsage: CGFloat {
+        guard cores.count != 0 else { return -1 }
+        return cores.map { $0.idle }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var stringValueLoad: String {
+        
+        return "\(load.reversed().map { String(Int($0)) }.joined(separator: ", ") + "M")"
+    }
+    
+    var coreProcess: [[BulletProcess]] {
+        return cores.compactMap { core in
+            let maxCount = Double(Int(UIScreen.screenWidth * 0.094))
+            let sysItemCount = Int((core.system / 100) * maxCount)
+            let systemBullets = Array.init(repeating: BulletProcess(priority: 1, color: .red), count: sysItemCount)
+            
+            let userItemCount = Int((core.user / 100) * maxCount)
+            let userBullets = Array.init(repeating: BulletProcess(priority: 2, color: .green), count: userItemCount)
+            
+            let iowaitItemCount = Int((core.iowait / 100) * maxCount)
+            let iowaitBullets = Array.init(repeating: BulletProcess(priority: 3, color: .purple), count: iowaitItemCount)
+            
+            let stealItemCount = Int((core.steal / 100) * maxCount)
+            let stealBullets = Array.init(repeating: BulletProcess(priority: 4, color: .yellow), count: stealItemCount)
+            
+            let grayBulletStartInt = (sysItemCount + userItemCount + iowaitItemCount + stealItemCount)
+            
+            let processes = systemBullets + userBullets + iowaitBullets + stealBullets + (grayBulletStartInt ..< Int(maxCount)).map { BulletProcess(priority: $0, color: .gray) }
+            
+            return processes
+        }
+    }
+    
+    @Published var freeMemory: CGFloat = 0
+    
+    @Published var usedMemory: CGFloat = 0
+    
+    @Published var cachedMemory: CGFloat = 0
+    
+    @Published var totalMemory: CGFloat = 0
+    
+    var memoryPercentageUsed: CGFloat {
+        let used = usedMemory
+        let total = totalMemory
+        guard !(total == 0.001 && used == 0.001) else { return 0.001 }
+        if total != 0 {
+            return (used / total) * 1000
+        } else {
+            return 0.001
+        }
+    }
+    
+    init(sshConnectionWrapper: SSHConnectionWrapper) {
+        print("Inited - ViewModel")
+        self.sshConnectionWrapper = sshConnectionWrapper
+        self.server = sshConnectionWrapper.connection.server
+    }
+    
+}
+
+struct ServerStatusDetailView: View {
+    
+    @State private var timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+    
+//    @ObservedObject private var viewModel: ServerStatusDetailViewModel
+    
+    @StateObject var sshConnectionWrapper: SSHConnectionWrapper
+    
+    let server: Server
+    
+    @State var load: [CGFloat] = [0.01,0.01,0.01]
+    
+    @State var cores: [Core] = .init()
+    
+    var totalSystemUsage: CGFloat {
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.system }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var totalUserUsage: CGFloat {
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.user }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var totalIOWaitUsage: CGFloat {
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.iowait }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var totalStealUsage: CGFloat {
+        guard cores.count != 0 else { return 0 }
+        return cores.map { $0.steal }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var totalIdleUsage: CGFloat {
+        guard cores.count != 0 else { return -1 }
+        return cores.map { $0.idle }.reduce(0, +) / Double(cores.count)
+    }
+    
+    var stringValueLoad: String {
+        
+        return "\(load.reversed().map { String(Int($0)) }.joined(separator: ", ") + "M")"
+    }
+    
+    var coreProcess: [[BulletProcess]] {
+        return cores.compactMap { core in
+            let maxCount = Double(Int(UIScreen.screenWidth * 0.094))
+            let sysItemCount = Int((core.system / 100) * maxCount)
+            let systemBullets = Array.init(repeating: BulletProcess(priority: 1, color: .red), count: sysItemCount)
+            
+            let userItemCount = Int((core.user / 100) * maxCount)
+            let userBullets = Array.init(repeating: BulletProcess(priority: 2, color: .green), count: userItemCount)
+            
+            let iowaitItemCount = Int((core.iowait / 100) * maxCount)
+            let iowaitBullets = Array.init(repeating: BulletProcess(priority: 3, color: .purple), count: iowaitItemCount)
+            
+            let stealItemCount = Int((core.steal / 100) * maxCount)
+            let stealBullets = Array.init(repeating: BulletProcess(priority: 4, color: .yellow), count: stealItemCount)
+            
+            let grayBulletStartInt = (sysItemCount + userItemCount + iowaitItemCount + stealItemCount)
+            
+            let processes = systemBullets + userBullets + iowaitBullets + stealBullets + (grayBulletStartInt ..< Int(maxCount)).map { BulletProcess(priority: $0, color: .gray) }
+            
+            return processes
+        }
+    }
+    
+    @State var freeMemory: CGFloat = 0
+    
+    @State var usedMemory: CGFloat = 0
+    
+    @State var cachedMemory: CGFloat = 0
+    
+    @State var totalMemory: CGFloat = 0
+    
+    var memoryPercentageUsed: CGFloat {
+        let used = usedMemory
+        let total = totalMemory
+        guard !(total == 0.001 && used == 0.001) else { return 0.001 }
+        if total != 0 {
+            return (used / total) * 1000
+        } else {
+            return 0.001
+        }
+    }
+    
+    init(sshConnectionWrapper: SSHConnectionWrapper) {
+//        self._viewModel = ObservedObject(wrappedValue: .init(sshConnectionWrapper: sshConnectionWrapper))
+        self._sshConnectionWrapper = StateObject(wrappedValue: .init(sshConnection: sshConnectionWrapper.connection))
+        self.server = sshConnectionWrapper.connection.server
     }
     
     var cpuSection: some View {
@@ -29,9 +194,7 @@ struct ServerStatusDetailView: View {
             VStack(spacing: 15) {
                 HStack {
                     HStack(alignment: .bottom, spacing: 3) {
-                        let totalIdleUsage = viewModel.cpu.totalIdleUsage(cached: cached)
-                        let totalUsage = totalIdleUsage == -1 ? 0.001 : 100.0 - totalIdleUsage
-                        Text("\(Int(totalUsage))")
+                        Text("\(Int(100 - totalIdleUsage))")
                             .font(.system(.largeTitle, design: .rounded))
                         Text("%")
                             .font(.subheadline)
@@ -40,41 +203,37 @@ struct ServerStatusDetailView: View {
                     
                     Spacer()
                     
-                    let systemUsage = viewModel.cpu.totalSystemUsage(cached: cached)
                     ServerStatusDetailMetric(
                         color: .red,
                         label: "SYS",
-                        value: "\(Int(systemUsage))",
+                        value: "\(Int(totalSystemUsage))",
                         valueMetric: "%"
                     )
                     
                     Spacer()
                     
-                    let userUsage = viewModel.cpu.totalUserUsage(cached: cached)
                     ServerStatusDetailMetric(
                         color: .green,
                         label: "USER",
-                        value: "\(Int(userUsage))",
+                        value: "\(Int(totalUserUsage))",
                         valueMetric: "%"
                     )
                     
                     Spacer()
                     
-                    let iowaitUsage = viewModel.cpu.totalIOWaitUsage(cached: cached)
                     ServerStatusDetailMetric(
                         color: .purple,
                         label: "IOWAIT",
-                        value: "\(Int(iowaitUsage))",
+                        value: "\(Int(totalIOWaitUsage))",
                         valueMetric: "%"
                     )
                     
                     Spacer()
                     
-                    let stealUsage = viewModel.cpu.totalStealUsage(cached: cached)
                     ServerStatusDetailMetric(
                         color: .yellow,
                         label: "STEAL",
-                        value: "\(Int(stealUsage))",
+                        value: "\(Int(totalStealUsage))",
                         valueMetric: "%"
                     )
                     
@@ -82,7 +241,7 @@ struct ServerStatusDetailView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 3) {
-                    ForEach(viewModel.coreProcess, id: \.self) { row in
+                    ForEach(coreProcess, id: \.self) { row in
                         HStack(spacing: 4) {
                             ForEach(row, id: \.self) { bullet in
                                 Rectangle()
@@ -96,11 +255,11 @@ struct ServerStatusDetailView: View {
                 
                 HStack {
                     
-                    ServerStatusDetailMetric(label: "CORES", value: "\(viewModel.cpu.cores(cached: cached).count)", valueMetric: "")
+                    ServerStatusDetailMetric(label: "CORES", value: "\(cores.count)", valueMetric: "")
                     
                     Spacer()
                     
-                    ServerStatusDetailMetric(label: "IDLE", value: "\(Int(viewModel.cpu.totalIdleUsage(cached: cached)))", valueMetric: "%")
+                    ServerStatusDetailMetric(label: "IDLE", value: "\(Int(totalIdleUsage))", valueMetric: "%")
                     
                     Spacer()
                     
@@ -108,12 +267,12 @@ struct ServerStatusDetailView: View {
                     
                     Spacer()
                     
-                    ServerStatusDetailMetric(label: " LOAD", value: "", valueMetric: "1, 5, 15M")
+                    ServerStatusDetailMetric(label: " LOAD", value: "", valueMetric: stringValueLoad)
                     
                     Spacer()
                     
                     StatusMultiRing(
-                        percent: viewModel.cpu.load(cached: cached),
+                        percent: load,
                         startAngle: -90,
                         ringWidth: 4,
                         ringSpaceOffSet: 10,
@@ -129,7 +288,6 @@ struct ServerStatusDetailView: View {
     var memorySection: some View {
         GroupBox {
             HStack {
-                let freeMemory = viewModel.memory.free(cached: cached)
                 ServerStatusDetailMetric(
                     label: "FREE",
                     value: freeMemory.humanizeMiBMemory(),
@@ -138,7 +296,6 @@ struct ServerStatusDetailView: View {
                 
                 Spacer()
                 
-                let usedMemory = viewModel.memory.used(cached: cached)
                 ServerStatusDetailMetric(
                     color: .green, label: "USED",
                     value: usedMemory.humanizeMiBMemory(),
@@ -147,7 +304,6 @@ struct ServerStatusDetailView: View {
                 
                 Spacer()
                 
-                let cachedMemory = viewModel.memory.cache(cached: cached)
                 ServerStatusDetailMetric(
                     color: .gray,
                     label: "CACHE",
@@ -158,7 +314,6 @@ struct ServerStatusDetailView: View {
                 Spacer()
                 
                 ZStack {
-                    let memoryPercentageUsed = viewModel.memory.memoryPercentageUsed(cached: cached)
                     StatusRing(
                         percent: memoryPercentageUsed,
                         startAngle: -90,
@@ -206,6 +361,24 @@ struct ServerStatusDetailView: View {
             print("Connected")
             connect()
         }
+        .onReceive(sshConnectionWrapper.cpu.load.eraseToAnyPublisher()) { newLoad in
+            self.load = newLoad
+        }
+        .onReceive(sshConnectionWrapper.cpu.cores.eraseToAnyPublisher()) { newCores in
+            self.cores = newCores
+        }
+        .onReceive(sshConnectionWrapper.memory.free.eraseToAnyPublisher()) { newFree in
+            self.freeMemory = newFree
+        }
+        .onReceive(sshConnectionWrapper.memory.used.eraseToAnyPublisher()) { newUsed in
+            self.usedMemory = newUsed
+        }
+        .onReceive(sshConnectionWrapper.memory.total.eraseToAnyPublisher()) { newTotal in
+            self.totalMemory = newTotal
+        }
+        .onReceive(sshConnectionWrapper.memory.cache.eraseToAnyPublisher()) { newCached in
+            self.cachedMemory = newCached
+        }
         .onReceive(timer) { _ in
             getServerData()
         }
@@ -213,249 +386,25 @@ struct ServerStatusDetailView: View {
     
     func connect() {
         self.timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-        self.viewModel.connect()
     }
     
     func disconnect() {
         self.timer.upstream.connect().cancel()
-        self.viewModel.disconnect()
+        
     }
     
     func getServerData() {
-        viewModel.getServerData()
+        
     }
 }
 
-extension ServerStatusDetailView {
-    class ViewModel: ServerProtocol {
-        
-        @Published var cpu: CPU
-        
-        @Published var memory: Memory
-        
-        @Published var swap: Swap
-        
-        @Published var network: Network
-        
-        @Published var storage: Storage
-        
-        @Published var loaded = false
-        
-        
-        var cpuCores: [Core] {
-            if loaded {
-                return cpu.cores
-            } else {
-                let id = server.id.uuidString
-                let cores = (serverCache.cache[id]?["cores"] as? [Core] ?? .init())
-                return cores
-            }
-        }
-        
-        var coreProcess: [[BulletProcess]] {
-            return cpuCores.compactMap { core in
-                let maxCount = Double(Int(UIScreen.screenWidth * 0.094))
-                let sysItemCount = Int((core.system / 100) * maxCount)
-                let systemBullets = Array.init(repeating: BulletProcess(priority: 1, color: .red), count: sysItemCount)
-                
-                let userItemCount = Int((core.user / 100) * maxCount)
-                let userBullets = Array.init(repeating: BulletProcess(priority: 2, color: .green), count: userItemCount)
-                
-                let iowaitItemCount = Int((core.iowait / 100) * maxCount)
-                let iowaitBullets = Array.init(repeating: BulletProcess(priority: 3, color: .purple), count: iowaitItemCount)
-                
-                let stealItemCount = Int((core.steal / 100) * maxCount)
-                let stealBullets = Array.init(repeating: BulletProcess(priority: 4, color: .yellow), count: stealItemCount)
-                
-                let grayBulletStartInt = (sysItemCount + userItemCount + iowaitItemCount + stealItemCount)
-                
-                let processes = systemBullets + userBullets + iowaitBullets + stealBullets + (grayBulletStartInt ..< Int(maxCount)).map { BulletProcess(priority: $0, color: .gray) }
-                
-                return processes
-            }
-        }
-
-//        var cpuPercentage: CGFloat {
-//            let idle = cpuIdle
-//            return idle == -1 ? 0.001 : 100.0 - idle
-//        }
-//
-//        var memoryFree: CGFloat {
-//            if loaded {
-//                return memory.free
-//            } else {
-//                // Get Cached
-//                let id = server.id.uuidString
-//                let value = (serverCache.cache[id]?["memoryFree"] as? CGFloat) ?? 0.001
-//                return value
-//            }
-//        }
-//
-//        var memoryUsed: CGFloat {
-//            if loaded {
-//                return memory.used
-//            } else {
-//                // Get Cached
-//                let id = server.id.uuidString
-//                let value = (serverCache.cache[id]?["memoryUsed"] as? CGFloat) ?? 0.001
-//                return value
-//            }
-//        }
-//
-//        var cacheUsed: CGFloat {
-//            if loaded {
-//                return memory.cache
-//            } else {
-//                // Get Cached
-//                let id = server.id.uuidString
-//                let value = (serverCache.cache[id]?["memoryCacheUsed"] as? CGFloat) ?? 0.001
-//                return value
-//            }
-//        }
-//
-//        var swapPercentageUsed: CGFloat {
-//            if loaded {
-//                return swap.swapPercentageUsed
-//            } else {
-//                // Get Cached
-//                let id = server.id.uuidString
-//                let value = (serverCache.cache[id]?["swapPercentageUsed"] as? CGFloat) ?? 0.001
-//                return value
-//            }
-//        }
-//
-//        var networkUp: CGFloat {
-//            if loaded {
-//                return network.up
-//            } else {
-//                let id = server.id.uuidString
-//                let value = (serverCache.cache[id]?["up"] as? Double) ?? 0
-//                return value
-//            }
-//        }
-//
-//        var networkDown: CGFloat {
-//            if loaded {
-//                return network.down
-//            } else {
-//                let id = server.id.uuidString
-//                let value = (serverCache.cache[id]?["down"] as? Double) ?? 0
-//                return value
-//            }
-//        }
-//
-//        var totalReads: CGFloat {
-//            if loaded {
-//                return storage.totalReads
-//            } else {
-//                let id = server.id.uuidString
-//                let value = (serverCache.cache[id]?["reads"] as? Double) ?? 0
-//                return value
-//            }
-//        }
-//
-//        var totalWrites: CGFloat {
-//            if loaded {
-//                return storage.totalWrites
-//            } else {
-//                let id = server.id.uuidString
-//                let value = (serverCache.cache[id]?["writes"] as? Double) ?? 0
-//                return value
-//            }
-//        }
-        
-        private var sshConnection: SSHConnection
-        
-        private let server: Server
-        
-        private let serverCache: ServerCache
-        
-        init(server: Server) {
-            self.server = server
-            self.sshConnection = SSHConnection(server)
-            self.serverCache = ServerCache.shared
-            self.cpu = CPU(self.sshConnection)
-            self.memory = Memory(self.sshConnection)
-            self.swap = Swap(self.sshConnection)
-            self.network = Network(self.sshConnection)
-            self.storage = Storage(self.sshConnection)
-            print("ServerStatusDetailView - \(server.name) - Initialized")
-        }
-        
-        deinit {
-            print("ServerStatusDetailView - \(server.name) - Dinitialized")
-        }
-        
-        func connect() {
-            Task {
-                try await self.sshConnection.connect()
-            }
-        }
-        
-        func disconnect() {
-            Task {
-                try await self.sshConnection.disconnect()
-            }
-        }
-        
-        func getServerData() {
-            Task {
-                await cpu.update()
-                await memory.update()
-                await swap.update()
-                await network.update()
-                await storage.update()
-                print("Ran From ServerStatusDetailView")
-                await MainActor.run {
-                    loaded = true
-                }
-            }
-        }
-    }
-}
-
-//struct ServerDetailStatusView_Previews: PreviewProvider {
+//struct ServerStatusDetailViewV2_Previews: PreviewProvider {
 //    static var previews: some View {
-//        NavigationView {
-//            ServerStatusDetailView(server: <#Server#>)
-//        }
+//        ServerStatusDetailView()
 //    }
 //}
 
-struct ServerStatusDetailMetric: View {
-    
-    var color: Color? = nil
-    
-    var label: String
-    
-    var value: String
-    
-    var valueMetric: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 1) {
-            HStack(alignment: .center, spacing: 5) {
-                if let color = color {
-                    Rectangle()
-                        .fill(color)
-                        .frame(width: 5, height: 10, alignment: .center)
-                        .cornerRadius(10)
-                }
-                Text(label)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-            }
-            
-            HStack(alignment: .bottom, spacing: 3) {
-                Text(value)
-                    .font(.system(.caption, design: .rounded))
-                    .bold()
-                Text(valueMetric)
-                    .font(.caption2)
-            }
-        }
-    }
-}
+
 
 struct BulletProcess: Hashable {
     var priority: Int = 5

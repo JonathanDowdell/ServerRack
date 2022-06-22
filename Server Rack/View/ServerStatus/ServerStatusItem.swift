@@ -9,25 +9,80 @@ import SwiftUI
 
 struct ServerStatusItem: View {
     
-    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
     
     @AppStorage("temperature") fileprivate var temperatureType: TemperatureType = .fahrenheit
     
     @AppStorage("displaygrid") private var displayGridType: DisplayGridType = .stack
     
-    @StateObject private var viewModel: ViewModel
+    @State private var load: [CGFloat] = [0.01,0.01,0.01]
     
-    @State private var connected = false
-    
-    private var server: Server
-    
-    var cached: Bool {
-        return !viewModel.loaded
+    private var cpuPercentUsage: CGFloat {
+        return 100 - connection.cpu.totalIdleUsage
     }
+    
+    @State private var totalMemory: CGFloat = 0.001
+    
+    @State private var usedMemory: CGFloat = 0.001
+    
+    @State private var cacheMemory: CGFloat = 0.001
+    
+    var memoryPercentageUsed: CGFloat {
+        guard !(totalMemory == 0.001 && usedMemory == 0.001) else { return 0.001 }
+        if totalMemory != 0 {
+            return (usedMemory / totalMemory) * 1000
+        } else {
+            return 0.001
+        }
+    }
+    
+    @State private var totalCache: CGFloat = 0.001
+    
+    @State private var usedCache: CGFloat = 0.001
+    
+    @State private var cachedSwap: CGFloat = 0.001
+    
+    var swapPercentageUsed: CGFloat {
+        guard !(totalCache == 0.001 && usedCache == 0.001) else { return 0.001 }
+        if totalCache != 0 {
+            return (usedCache / totalCache) * 1000
+        } else {
+            return 0.001
+        }
+    }
+    
+    @State private var networkDevices: [NetworkDevice] = .init()
+    
+    var up: Double {
+        let value = networkDevices.map { $0.up }.reduce(0, +)
+        return Double(value) / 1048576
+    }
+    
+    var down: Double {
+        let value = networkDevices.map { $0.down }.reduce(0, +)
+        return Double(value) / 1048576
+    }
+    
+    @State private var deviceIOs: [DeviceIO] = .init()
+    
+    var reads: Double {
+        let value = deviceIOs.map { $0.read }.reduce(0, +)
+        return Double(value) / 2048.0
+    }
+    
+    var writes: Double {
+        let value = deviceIOs.map { $0.write }.reduce(0, +)
+        return Double(value) / 2048.0
+    }
+    
+    private var server: Server {
+        return connection.connection.server
+    }
+    
+    private var connection: SSHConnectionWrapper
 
-    init(server: Server) {
-        self.server = server
-        self._viewModel = StateObject(wrappedValue: ViewModel(server: server))
+    init(connection: SSHConnectionWrapper) {
+        self.connection = connection
     }
     
     var body: some View {
@@ -37,37 +92,48 @@ struct ServerStatusItem: View {
             case .grid: gridLayout
             }
         }
-        .onAppear {
-            connect()
-        }
-        .onDisappear {
-            disconnect()
-        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
-            print("Disconnect")
             disconnect()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-            print("Connected")
             connect()
-        }   
+        }
+        .onReceive(connection.cpu.load.eraseToAnyPublisher()) { newLoad in
+            self.load = newLoad
+        }
+        .onReceive(connection.memory.total.eraseToAnyPublisher()) { newTotal in
+            self.totalMemory = newTotal
+        }
+        .onReceive(connection.memory.used.eraseToAnyPublisher()) { newUsed in
+            self.usedMemory = newUsed
+        }
+        .onReceive(connection.swap.total.eraseToAnyPublisher()) { newTotal in
+            self.totalCache = newTotal
+        }
+        .onReceive(connection.swap.used.eraseToAnyPublisher()) { newUsed in
+            self.usedCache = newUsed
+        }
+        .onReceive(connection.network.devices.eraseToAnyPublisher()) { newDevices in
+            self.networkDevices = newDevices
+        }
+        .onReceive(connection.storage.deviceIOs.eraseToAnyPublisher()) { newDevices in
+            self.deviceIOs = newDevices
+        }
         .onReceive(timer) { _ in
             getServerData()
         }
     }
     
     func connect() {
-        self.timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-        self.viewModel.connect()
+        self.timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
     }
     
     func disconnect() {
         self.timer.upstream.connect().cancel()
-        self.viewModel.disconnect()
     }
     
     func getServerData() {
-        viewModel.getServerData()
+        connection.update()
     }
 }
 
@@ -81,14 +147,14 @@ extension ServerStatusItem {
             Spacer()
             
             HStack(spacing: 15) {
-                if viewModel.loaded || !viewModel.cacheEmpty {
+                if connection.cpu.fahrenheit != 0 || connection.cpu.celsius != 0 {
                     switch temperatureType {
                     case .fahrenheit:
-                        Text("\(viewModel.cpu.fahrenheit(cached: !viewModel.loaded))°F")
+                        Text("\(connection.cpu.fahrenheit)°F")
                             .font(.system(.caption, design: .monospaced))
                             .foregroundColor(.secondary)
                     case .celsius:
-                        Text("\(viewModel.cpu.celsius(cached: !viewModel.loaded))°C")
+                        Text("\(connection.cpu.celsius)°C")
                             .font(.system(.caption, design: .monospaced))
                             .foregroundColor(.secondary)
                     }
@@ -119,15 +185,11 @@ extension ServerStatusItem {
             head
                 .padding(.bottom, 8)
             
-//            ForEach(viewModel.cpu.load(cached: cached), id: \.self) { load in
-//                Text("\(load)")
-//            }
-            
             HStack {
                 FlipView {
                     VStack(spacing: 12) {
                         StatusMultiRing(
-                            percent: viewModel.cpu.load(cached: cached),
+                            percent: load,
                             startAngle: -90,
                             ringWidth: 5,
                             ringSpaceOffSet: 12,
@@ -140,11 +202,10 @@ extension ServerStatusItem {
                     }
                 } backView: {
                     VStack(spacing: 12) {
-                        let totalIdleUsage = viewModel.cpu.totalIdleUsage(cached: cached)
-                        let totalUsage = totalIdleUsage == -1 ? 0.001 : 100.0 - totalIdleUsage
+                        let cpuPercentage = cpuPercentUsage
                         ZStack {
                             StatusRing(
-                                percent: totalUsage,
+                                percent: cpuPercentage,
                                 startAngle: -90,
                                 ringWidth: 7,
                                 ringColor: .green,
@@ -154,7 +215,7 @@ extension ServerStatusItem {
                             
                             
                             Group {
-                                Text("\(Int8(totalUsage))%")
+                                Text("\(Int8(cpuPercentage))%")
                             }
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -172,7 +233,6 @@ extension ServerStatusItem {
                 FlipView {
                     VStack(spacing: 12) {
                         ZStack {
-                            let memoryPercentageUsed = viewModel.memory.memoryPercentageUsed(cached: cached)
                             StatusRing(
                                 percent: memoryPercentageUsed,
                                 startAngle: -90,
@@ -203,7 +263,7 @@ extension ServerStatusItem {
                     VStack(spacing: 12) {
                         ZStack {
                             StatusRing(
-                                percent: viewModel.swapPercentageUsed,
+                                percent: swapPercentageUsed,
                                 startAngle: -90,
                                 ringWidth: 7,
                                 ringColor: .green,
@@ -212,10 +272,10 @@ extension ServerStatusItem {
                             )
                             
                             Group {
-                                if viewModel.swapPercentageUsed == 0.001 {
+                                if swapPercentageUsed == 0.001 {
                                     Text("%")
                                 } else {
-                                    Text("\(Int8(viewModel.swapPercentageUsed))%")
+                                    Text("\(Int8(swapPercentageUsed))%")
                                 }
                             }
                             .font(.caption)
@@ -233,9 +293,9 @@ extension ServerStatusItem {
                 
                 FlipView {
                     ServerIOStatusItem(
-                        topValue: viewModel.networkUp,
+                        topValue: up,
                         topString: "upload",
-                        bottomValue: viewModel.networkDown,
+                        bottomValue: down,
                         bottomString: "download"
                     )
                 } backView: {
@@ -292,9 +352,9 @@ extension ServerStatusItem {
                 
                 FlipView {
                     ServerIOStatusItem(
-                        topValue: viewModel.totalReads,
+                        topValue: reads,
                         topString: "Read",
-                        bottomValue: viewModel.totalWrites,
+                        bottomValue: writes,
                         bottomString: "Write"
                     )
                 } backView: {
@@ -362,25 +422,20 @@ extension ServerStatusItem {
                 Spacer()
                 
                 HStack(spacing: 15) {
-                    if viewModel.loaded || !viewModel.cacheEmpty {
-                        Group {
-                            switch temperatureType {
-                            case .fahrenheit:
-                                Text("\(viewModel.cpu.fahrenheit(cached: !viewModel.loaded))°F")
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            case .celsius:
-                                Text("\(viewModel.cpu.celsius(cached: !viewModel.loaded))°C")
-                                    .font(.system(.caption, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                            }
+                    if connection.cpu.fahrenheit != 0 || connection.cpu.celsius != 0 {
+                        switch temperatureType {
+                        case .fahrenheit:
+                            Text("\(connection.cpu.fahrenheit)°F")
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.secondary)
+                        case .celsius:
+                            Text("\(connection.cpu.celsius)°C")
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.secondary)
                         }
                     } else {
                         PulsatingView()
                             .frame(width: 20, height: 20, alignment: .center)
-                            .onAppear {
-                                print(viewModel.cacheEmpty)
-                            }
                     }
                 }
             }
@@ -388,7 +443,7 @@ extension ServerStatusItem {
             FlipView {
                 VStack(spacing: 12) {
                     StatusMultiRing(
-                        percent: viewModel.cpuLoad,
+                        percent: load,
                         startAngle: -90,
                         ringWidth: 5,
                         ringSpaceOffSet: 12,
@@ -403,7 +458,7 @@ extension ServerStatusItem {
                 VStack(spacing: 12) {
                     ZStack {
                         StatusRing(
-                            percent: viewModel.cpuPercentage,
+                            percent: cpuPercentUsage,
                             startAngle: -90,
                             ringWidth: 7,
                             ringColor: .green,
@@ -412,10 +467,10 @@ extension ServerStatusItem {
                         )
                         
                         Group {
-                            if viewModel.cpuIdle == -1 {
+                            if cpuPercentUsage == -1 {
                                 Text("%")
                             } else {
-                                Text("\(Int8(100.0 - viewModel.cpuIdle))%")
+                                Text("\(Int8(cpuPercentUsage))%")
                             }
                         }
                         .font(.caption)

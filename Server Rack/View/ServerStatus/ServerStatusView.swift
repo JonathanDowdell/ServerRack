@@ -18,7 +18,9 @@ struct ServerStatusView: View {
         predicate: NSPredicate(format: "show == %@", NSNumber(booleanLiteral: true))
     ) private var servers: FetchedResults<Server>
     
-    @State private var selectedServer: Server?
+    @EnvironmentObject var sshManager: SSHManager
+    
+    @State private var selectedConnection: SSHConnectionWrapper?
     
     @State private var shouldPresentServerDetailView = false
     
@@ -46,18 +48,18 @@ struct ServerStatusView: View {
             ScrollView {
                 ZStack {
                     NavigationLink("", isActive: $shouldPresentServerDetailView) {
-                        if let selectedServer = selectedServer {
-                            ServerStatusDetailView(server: selectedServer)
+                        if let selectedConnection = selectedConnection {
+                            ServerStatusDetailView(sshConnectionWrapper: selectedConnection)
                         }
                     }
                     LazyVGrid(columns: columns, spacing: 16) {
                         Section {
-                            ForEach(servers, id: \.self) { server in
+                            ForEach(sshManager.sshConnections, id: \.id) { connection in
                                 Button {
-                                    selectedServer = server
-                                    shouldPresentServerDetailView = true
+                                    self.selectedConnection = connection
+                                    self.shouldPresentServerDetailView = true
                                 } label: {
-                                    ServerStatusItem(server: server)
+                                    ServerStatusItem(connection: connection)
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -92,8 +94,13 @@ struct ServerStatusView: View {
             .toolbar {}
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .onAppear {
-            print(UIScreen.screenWidth * 0.094)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+            print("Disconnect")
+            sshManager.disConnectAll()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            print("Connected")
+            sshManager.connectAll()
         }
     }
 }
@@ -102,12 +109,4 @@ struct ServerStatusView_Previews: PreviewProvider {
     static var previews: some View {
         ServerStatusView()
     }
-}
-
-extension ServerStatusView {
-    
-}
-
-class SSHController: ObservableObject {
-    var connections: [ObjectIdentifier:SSHConnection] = .init()
 }

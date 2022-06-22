@@ -103,7 +103,7 @@ struct ServerStatusDetailView: View {
     
 //    @ObservedObject private var viewModel: ServerStatusDetailViewModel
     
-    @StateObject var sshConnectionWrapper: SSHConnectionWrapper
+    @State var sshConnectionWrapper: SSHConnectionWrapper
     
     let server: Server
     
@@ -184,8 +184,7 @@ struct ServerStatusDetailView: View {
     }
     
     init(sshConnectionWrapper: SSHConnectionWrapper) {
-//        self._viewModel = ObservedObject(wrappedValue: .init(sshConnectionWrapper: sshConnectionWrapper))
-        self._sshConnectionWrapper = StateObject(wrappedValue: .init(sshConnection: sshConnectionWrapper.connection))
+        self._sshConnectionWrapper = State(initialValue: sshConnectionWrapper)
         self.server = sshConnectionWrapper.connection.server
     }
     

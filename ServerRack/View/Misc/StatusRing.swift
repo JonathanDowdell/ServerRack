@@ -38,7 +38,7 @@ struct CircleItem_Previews: PreviewProvider {
             startAngle: 90.0,
             ringWidth: 5,
             ringColor: .green,
-            backgroundColor: Color(.systemGray2),
+            backgroundColor: Color(.systemGray6),
             drawnClockwise: true
         )
             .frame(width: 100, height: 100, alignment: .center)

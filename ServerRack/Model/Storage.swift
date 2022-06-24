@@ -12,7 +12,7 @@ struct Storage {
     
     var devices: [StorageDevice] = .init()
     
-    var deviceIOs: [DeviceIO] = .init()
+    var deviceIOs: [IODevice] = .init()
     
     /// Total Reads - MB
     var totalReads: Double {
@@ -110,9 +110,9 @@ struct Storage {
         return rawProcDiskStatsData.components(separatedBy: "split")
     }
     
-    func parseProcDiskStatsArray(_ procDiskStatsArray: [String]) -> [DeviceIO] {
+    func parseProcDiskStatsArray(_ procDiskStatsArray: [String]) -> [IODevice] {
         return procDiskStatsArray.compactMap { item in
-            var deviceIO = DeviceIO()
+            var deviceIO = IODevice()
             let items = item.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: " ")
             guard items.count == 3 else { return nil }
             
@@ -144,7 +144,7 @@ struct StorageDevice {
     var mountedOn: String = ""
 }
 
-struct DeviceIO {
+struct IODevice {
     var name: String = ""
     var read: Int = 0
     var write: Int = 0
@@ -154,7 +154,7 @@ class STORAGE {
     
     var devices = CurrentValueSubject<[StorageDevice], Never>(.init())
     
-    var deviceIOs = CurrentValueSubject<[DeviceIO], Never>(.init())
+    var deviceIOs = CurrentValueSubject<[IODevice], Never>(.init())
     
     /// Total Reads - MB
     var totalReads: Double {
@@ -252,9 +252,9 @@ class STORAGE {
         return rawProcDiskStatsData.components(separatedBy: "split")
     }
     
-    func parseProcDiskStatsArray(_ procDiskStatsArray: [String]) -> [DeviceIO] {
+    func parseProcDiskStatsArray(_ procDiskStatsArray: [String]) -> [IODevice] {
         return procDiskStatsArray.compactMap { item in
-            var deviceIO = DeviceIO()
+            var deviceIO = IODevice()
             let items = item.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: " ")
             guard items.count == 3 else { return nil }
             

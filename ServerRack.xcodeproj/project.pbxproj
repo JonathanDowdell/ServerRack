@@ -40,6 +40,10 @@
 		248C3481284878610042FB89 /* ServerConfigListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C3480284878610042FB89 /* ServerConfigListView.swift */; };
 		248C3483284878FD0042FB89 /* ServerConfigItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C3482284878FD0042FB89 /* ServerConfigItem.swift */; };
 		248C34852848790E0042FB89 /* ServerConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248C34842848790E0042FB89 /* ServerConfigView.swift */; };
+		249E079D2863A77800A8933E /* ServerStatusScratchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249E079C2863A77800A8933E /* ServerStatusScratchItem.swift */; };
+		249E079F2864037E00A8933E /* Tasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249E079E2864037E00A8933E /* Tasks.swift */; };
+		249E07A12864B72700A8933E /* ServerStatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249E07A02864B72700A8933E /* ServerStatusItem.swift */; };
+		249E07A32864B76900A8933E /* ServerStatusLineRingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249E07A22864B76900A8933E /* ServerStatusLineRingItem.swift */; };
 		24D263F2284B9DDF00A1A9E7 /* ServerCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D263F1284B9DDF00A1A9E7 /* ServerCache.swift */; };
 		24F46853283D6FF200C7D876 /* StatusItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46852283D6FF200C7D876 /* StatusItemModel.swift */; };
 		24F46856283D9A0400C7D876 /* String+etx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46855283D9A0400C7D876 /* String+etx.swift */; };
@@ -51,7 +55,7 @@
 		24F46866283E926800C7D876 /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46865283E926800C7D876 /* FlipView.swift */; };
 		24F4686A283ECF0500C7D876 /* TempStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46869283ECF0500C7D876 /* TempStatus.swift */; };
 		24F4686F283ED25100C7D876 /* ServerStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F4686E283ED25100C7D876 /* ServerStatusView.swift */; };
-		24F46871283ED39F00C7D876 /* ServerStatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46870283ED39F00C7D876 /* ServerStatusItem.swift */; };
+		24F46871283ED39F00C7D876 /* ServerStatusRingMetricItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46870283ED39F00C7D876 /* ServerStatusRingMetricItem.swift */; };
 		24F46873283EE07100C7D876 /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46872283EE07100C7D876 /* Commands.swift */; };
 		24F46877283F0C5000C7D876 /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46876283F0C5000C7D876 /* CPU.swift */; };
 		24F46879283F34E000C7D876 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F46878283F34E000C7D876 /* Memory.swift */; };
@@ -113,6 +117,10 @@
 		248C3480284878610042FB89 /* ServerConfigListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigListView.swift; sourceTree = "<group>"; };
 		248C3482284878FD0042FB89 /* ServerConfigItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigItem.swift; sourceTree = "<group>"; };
 		248C34842848790E0042FB89 /* ServerConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigView.swift; sourceTree = "<group>"; };
+		249E079C2863A77800A8933E /* ServerStatusScratchItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusScratchItem.swift; sourceTree = "<group>"; };
+		249E079E2864037E00A8933E /* Tasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tasks.swift; sourceTree = "<group>"; };
+		249E07A02864B72700A8933E /* ServerStatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusItem.swift; sourceTree = "<group>"; };
+		249E07A22864B76900A8933E /* ServerStatusLineRingItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusLineRingItem.swift; sourceTree = "<group>"; };
 		24D263F1284B9DDF00A1A9E7 /* ServerCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCache.swift; sourceTree = "<group>"; };
 		24F46852283D6FF200C7D876 /* StatusItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemModel.swift; sourceTree = "<group>"; };
 		24F46855283D9A0400C7D876 /* String+etx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+etx.swift"; sourceTree = "<group>"; };
@@ -124,7 +132,7 @@
 		24F46865283E926800C7D876 /* FlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
 		24F46869283ECF0500C7D876 /* TempStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempStatus.swift; sourceTree = "<group>"; };
 		24F4686E283ED25100C7D876 /* ServerStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusView.swift; sourceTree = "<group>"; };
-		24F46870283ED39F00C7D876 /* ServerStatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusItem.swift; sourceTree = "<group>"; };
+		24F46870283ED39F00C7D876 /* ServerStatusRingMetricItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusRingMetricItem.swift; sourceTree = "<group>"; };
 		24F46872283EE07100C7D876 /* Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
 		24F46876283F0C5000C7D876 /* CPU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
 		24F46878283F34E000C7D876 /* Memory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
@@ -265,6 +273,7 @@
 			children = (
 				24F46876283F0C5000C7D876 /* CPU.swift */,
 				241F7A25285189220098C274 /* Core.swift */,
+				249E079E2864037E00A8933E /* Tasks.swift */,
 				24F4687A283F3E6000C7D876 /* Swap.swift */,
 				24F46878283F34E000C7D876 /* Memory.swift */,
 				24F4687F28451BD900C7D876 /* Network.swift */,
@@ -369,9 +378,9 @@
 		24F4685C283DD2AA00C7D876 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				24F4685D283DD2B200C7D876 /* RingShape.swift */,
 				24F4685F283DD2D700C7D876 /* StatusRing.swift */,
 				24F46861283DD69B00C7D876 /* StatusMultiRing.swift */,
+				24F4685D283DD2B200C7D876 /* RingShape.swift */,
 				24F46865283E926800C7D876 /* FlipView.swift */,
 				24F4687D2841440100C7D876 /* PulsatingView.swift */,
 			);
@@ -382,8 +391,11 @@
 			isa = PBXGroup;
 			children = (
 				24F4686E283ED25100C7D876 /* ServerStatusView.swift */,
-				24F46870283ED39F00C7D876 /* ServerStatusItem.swift */,
+				249E07A02864B72700A8933E /* ServerStatusItem.swift */,
+				24F46870283ED39F00C7D876 /* ServerStatusRingMetricItem.swift */,
+				249E07A22864B76900A8933E /* ServerStatusLineRingItem.swift */,
 				241F7A2028507B9E0098C274 /* ServerStatusItemModel.swift */,
+				249E079C2863A77800A8933E /* ServerStatusScratchItem.swift */,
 				248C347D28486EA80042FB89 /* ServerIOStatusItem.swift */,
 			);
 			path = ServerStatus;
@@ -533,12 +545,15 @@
 				24F46860283DD2D700C7D876 /* StatusRing.swift in Sources */,
 				241F7A2B28526C3F0098C274 /* ServerSettingView.swift in Sources */,
 				241F7A342856EDD10098C274 /* SSHManager.swift in Sources */,
+				249E079F2864037E00A8933E /* Tasks.swift in Sources */,
 				241F7A282852528F0098C274 /* CGFloat+etx.swift in Sources */,
 				24F46877283F0C5000C7D876 /* CPU.swift in Sources */,
 				24F46866283E926800C7D876 /* FlipView.swift in Sources */,
 				24F46858283DB81000C7D876 /* TemperatureType.swift in Sources */,
 				241F7A2128507B9E0098C274 /* ServerStatusItemModel.swift in Sources */,
 				24F4687E2841440100C7D876 /* PulsatingView.swift in Sources */,
+				249E07A32864B76900A8933E /* ServerStatusLineRingItem.swift in Sources */,
+				249E079D2863A77800A8933E /* ServerStatusScratchItem.swift in Sources */,
 				24F4688028451BD900C7D876 /* Network.swift in Sources */,
 				24F46853283D6FF200C7D876 /* StatusItemModel.swift in Sources */,
 				24F4686F283ED25100C7D876 /* ServerStatusView.swift in Sources */,
@@ -561,12 +576,13 @@
 				24814046283C9367007E8381 /* Server_Rack.xcdatamodeld in Sources */,
 				24F46862283DD69B00C7D876 /* StatusMultiRing.swift in Sources */,
 				240B0883284F1A5B00F8BA9C /* DisplayGridType.swift in Sources */,
-				24F46871283ED39F00C7D876 /* ServerStatusItem.swift in Sources */,
+				24F46871283ED39F00C7D876 /* ServerStatusRingMetricItem.swift in Sources */,
 				24F468862845C90B00C7D876 /* Storage.swift in Sources */,
 				24F4685B283DC0DB00C7D876 /* StatusItemRing.swift in Sources */,
 				24D263F2284B9DDF00A1A9E7 /* ServerCache.swift in Sources */,
 				248C3481284878610042FB89 /* ServerConfigListView.swift in Sources */,
 				24F4687B283F3E6000C7D876 /* Swap.swift in Sources */,
+				249E07A12864B72700A8933E /* ServerStatusItem.swift in Sources */,
 				2481406E283C942B007E8381 /* StatusView.swift in Sources */,
 				24F46879283F34E000C7D876 /* Memory.swift in Sources */,
 				240B0881284F0B9900F8BA9C /* Server+CoreDataProperties.swift in Sources */,

@@ -101,8 +101,6 @@ struct ServerStatusDetailView: View {
     
     @State private var timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
     
-//    @ObservedObject private var viewModel: ServerStatusDetailViewModel
-    
     @State var sshConnectionWrapper: SSHConnectionWrapper
     
     let server: Server

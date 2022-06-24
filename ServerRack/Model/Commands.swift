@@ -13,6 +13,7 @@ enum Commands: String {
     case TopTop = "top -bn1 | sed -n '/top -/p'"
     case TopCPUCore = "top -1bcn1 -w512 | sed -n '/^%Cpu/p'"
     case TopCPU = "top -bn1 | sed -n '/Cpu/p'"
+    case TopTask = "top -bn1 | sed -n '/Tasks:/p'"
     case TopMem = "top -bn1 | sed -n '/Mem.:/p'"
     case TopSwap = "top -bn1 | sed -n '/Swap*:/p'"
     

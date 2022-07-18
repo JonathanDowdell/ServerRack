@@ -28,6 +28,7 @@ class CPU: ObservableObject {
         }
     }
     
+    // MARK: Total Idle Usage
     var totalIdleUsage: CGFloat {
         let cores = cores.value
         guard cores.count != 0 else { return -1 }

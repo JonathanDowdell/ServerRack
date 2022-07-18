@@ -11,7 +11,7 @@ import SwiftUI
 
 struct StatusItem: View {
     
-    @StateObject var vm: StatusItemModel
+    @StateObject var vm: ViewModel
     
     var body: some View {
         GroupBox {
@@ -231,6 +231,141 @@ struct StatusItem: View {
     func disconnect() {
         Task {
             try await vm.disconnect()
+        }
+    }
+}
+
+extension StatusItem {
+    class ViewModel: SSHConnection, ObservableObject {
+        
+        @Published var temperature = ""
+        
+        @Published var cpuLoad: [CGFloat] = [0.01,0.01,0.01]
+        
+        @Published var cpuIdle: CGFloat = 99.9
+        
+        private var timer: Timer?
+        
+        private let userDefault = UserDefaults()
+        
+        init(server: Server) {
+            super.init(server)
+        }
+        
+        deinit {
+            timer?.invalidate()
+            
+            print("Deinit - ViewModel")
+        }
+        
+        fileprivate func fetchTemp() async throws {
+            let tempType = TemperatureType(rawValue: userDefault.integer(forKey: "TemperatureType"))
+            let data = (try await self.send(command: Commands.SysHwmonTemp.rawValue) ?? "").trimmingCharacters(in: .newlines)
+            let celsius = Int((Double(data) ?? 0) * 0.001)
+            switch tempType {
+            case .fahrenheit:
+                let fahrenheit = celsius * 9 / 5 + 32
+                await MainActor.run {
+                    withAnimation {
+                        self.temperature = String(fahrenheit)
+                    }
+                }
+            case .celsius:
+                await MainActor.run {
+                    withAnimation {
+                        self.temperature = String(celsius)
+                    }
+                }
+            }
+        }
+        
+        fileprivate func fetchCpuLoad() async throws {
+            let data = (try await self.send(command: Commands.TopTop.rawValue) ?? "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased()
+            if let index = data.index(of: "load average: ") {
+                let rawCpuLoad = data[index...]
+                    .replacingOccurrences(of: "load average: ", with: "")
+                    .replacingOccurrences(of: " ", with: "")
+                let cpuLoad = rawCpuLoad.components(separatedBy: ",").compactMap { Double($0) }.map { max(0.001, CGFloat($0)) * 100 }
+                await MainActor.run {
+                    print(cpuLoad)
+                    withAnimation(.spring()) {
+                        self.cpuLoad = cpuLoad
+                    }
+                }
+            }
+        }
+        
+        fileprivate func fetchCpuIdle() async throws {
+            let data = (try await self.send(command: Commands.TopCPU.rawValue) ?? "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased()
+                .replacingOccurrences(of: " ", with: "")
+            if let array = data.matchingStrings(regex: "(\\d+\\.\\d[id])").first, let rawIdle = array.first?.trimmingCharacters(in: .letters), let cpuIdle = Double(rawIdle) {
+                await MainActor.run {
+                    withAnimation(.spring()) {
+                        self.cpuIdle = cpuIdle
+                    }
+                }
+            }
+        }
+        
+        fileprivate func fetchCpuUsage() async throws {
+            let data = (try await self.send(command: Commands.TopTop.rawValue) ?? "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased()
+            if let index = data.index(of: "load average: ") {
+                let rawCpuLoad = data[index...]
+                    .replacingOccurrences(of: "load average: ", with: "")
+                    .replacingOccurrences(of: " ", with: "")
+                let cpuLoad = rawCpuLoad.components(separatedBy: ",").compactMap { Double($0) }.map { max(0.001, CGFloat($0)) * 100 }
+                await MainActor.run {
+                    print(cpuLoad)
+                    withAnimation(.spring()) {
+                        self.cpuLoad = cpuLoad
+                    }
+                }
+            }
+        }
+        
+        @objc func fetchData() {
+            Task {
+                try await fetchTemp()
+                try await fetchCpuLoad()
+                try await fetchCpuIdle()
+            }
+        }
+        
+        override func connect() async throws {
+            if client == nil {
+                try await super.connect()
+                DispatchQueue.main.async {
+                    self.attachTimer()
+                }
+            }
+        }
+        
+        override func disconnect() async throws {
+            try await super.disconnect()
+            DispatchQueue.main.async {
+                self.dettachTimer()
+            }
+        }
+        
+        func attachTimer() {
+            self.timer = Timer.scheduledTimer(
+                timeInterval: 5.0,
+                target: self,
+                selector: #selector(fetchData),
+                userInfo: nil,
+                repeats: true
+            )
+        }
+        
+        func dettachTimer() {
+            self.timer?.invalidate()
+            self.timer = nil
         }
     }
 }

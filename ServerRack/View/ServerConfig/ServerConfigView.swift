@@ -84,6 +84,14 @@ struct ServerConfigView: View {
             }
             
             Toggle("Show in Status", isOn: $showStatus)
+            
+            
+            NavigationLink {
+                ServerConfigThemeView()
+            } label: {
+                Text("Themes")
+            }
+
         }
         .navigationTitle("Add Server")
         .toolbar {

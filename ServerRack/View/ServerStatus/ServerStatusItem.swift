@@ -17,6 +17,8 @@ struct ServerStatusItem: View {
     
     @State private var cores: [Core] = .init()
     
+    @State private var tasks: Tasks = .init()
+    
     @State private var totalMemory: CGFloat = 0.001
     
     @State private var usedMemory: CGFloat = 0.001
@@ -41,6 +43,7 @@ struct ServerStatusItem: View {
 
     init(connection: SSHConnectionWrapper) {
         self.connection = connection
+        
     }
     
     var body: some View {
@@ -51,6 +54,7 @@ struct ServerStatusItem: View {
                     temperature: temperature,
                     load: load,
                     cores: cores,
+                    tasks: tasks,
                     totalMemory: totalMemory,
                     usedMemory: usedMemory,
                     totalCache: totalCache,
@@ -59,6 +63,25 @@ struct ServerStatusItem: View {
                     deviceIOs: ioDevices
                 )
             )
+            
+            
+//            ServerStatusLineRingItem(
+//                viewModel: .init(
+//                    name: server.name,
+//                    temperature: temperature,
+//                    load: load,
+//                    cores: cores,
+//                    tasks: tasks,
+//                    totalMemory: totalMemory,
+//                    usedMemory: usedMemory,
+//                    totalCache: totalCache,
+//                    usedCache: usedCache,
+//                    networkDevices: networkDevices,
+//                    deviceIOs: ioDevices
+//                )
+//            )
+            
+            
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
             connect()
@@ -74,6 +97,9 @@ struct ServerStatusItem: View {
         }
         .onReceive(connection.cpu.cores.eraseToAnyPublisher()) { newCores in
             self.cores = newCores
+        }
+        .onReceive(connection.cpu.tasks.eraseToAnyPublisher()) { newTasks in
+            self.tasks = newTasks
         }
         .onReceive(connection.memory.total.eraseToAnyPublisher()) { newTotal in
             self.totalMemory = newTotal

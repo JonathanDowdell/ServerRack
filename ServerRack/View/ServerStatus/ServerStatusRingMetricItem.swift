@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ServerStatusRingMetricItem: View {
     
-    @AppStorage("temperature") fileprivate var temperatureType: TemperatureType = .fahrenheit
+    @AppStorage("temperature") private var temperatureType: TemperatureType = .fahrenheit
     
     @AppStorage("displaygrid") private var displayGridType: DisplayGridType = .stack
     
@@ -35,6 +35,7 @@ extension ServerStatusRingMetricItem {
             Text(viewModel.name)
                 .bold()
                 .font(.headline)
+                .foregroundColor(.primary)
             
             Spacer()
             
@@ -119,6 +120,7 @@ extension ServerStatusRingMetricItem {
                             .foregroundColor(.secondary)
                     }
                 }
+                .frame(height: 100)
                 
                 Spacer()
                 
@@ -182,124 +184,27 @@ extension ServerStatusRingMetricItem {
                             .foregroundColor(.secondary)
                     }
                 }
+                .frame(height: 100)
                 
                 Spacer()
                 
-                FlipView {
-                    ServerIOStatusItem(
-                        topValue: viewModel.up,
-                        topString: "upload",
-                        bottomValue: viewModel.down,
-                        bottomString: "download"
-                    )
-                } backView: {
-                    VStack {
-                        HStack(alignment: .bottom, spacing: 3) {
-                            Text("30")
-                                .font(.system(.body, design: .monospaced))
-                                .foregroundColor(.green)
-                                .bold()
-                            Text("K")
-                                .font(.system(.caption2, design: .monospaced))
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        HStack(alignment: .center, spacing: 0) {
-                            Image(systemName: "arrow.up")
-                                .font(.caption2)
-                            Text("/")
-                                .font(.subheadline)
-                            Text("s")
-                                .font(.system(.subheadline, design: .monospaced))
-                                .padding(.leading, 2)
-                        }
-                        .foregroundColor(.secondary)
-                        .padding(.bottom, 0.5)
-                        
-                        
-                        HStack(alignment: .bottom, spacing: 3) {
-                            Text("1")
-                                .font(.system(.body, design: .monospaced))
-                                .foregroundColor(.green)
-                                .bold()
-                            Text("K")
-                                .font(.system(.caption2, design: .monospaced))
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        HStack(alignment: .center, spacing: 0) {
-                            Image(systemName: "arrow.down")
-                                .font(.caption2)
-                            Text("/")
-                                .font(.subheadline)
-                            Text("s")
-                                .font(.system(.subheadline, design: .monospaced))
-                                .padding(.leading, 2)
-                        }
-                        .foregroundColor(.secondary)
-                        
-                        Spacer()
-                    }
-                }
+                ServerIOStatusItem(
+                    topValue: viewModel.up,
+                    topString: "upload",
+                    bottomValue: viewModel.down,
+                    bottomString: "download"
+                )
+                .frame(height: 100)
                 
                 Spacer()
                 
-                FlipView {
-                    ServerIOStatusItem(
-                        topValue: viewModel.reads,
-                        topString: "Read",
-                        bottomValue: viewModel.writes,
-                        bottomString: "Write"
-                    )
-                } backView: {
-                    VStack {
-                        HStack(alignment: .bottom, spacing: 3) {
-                            Text("30")
-                                .font(.system(.body, design: .monospaced))
-                                .foregroundColor(.green)
-                                .bold()
-                            Text("K")
-                                .font(.system(.caption2, design: .monospaced))
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        HStack(alignment: .center, spacing: 0) {
-                            Image(systemName: "arrow.up")
-                                .font(.caption2)
-                            Text("/")
-                                .font(.subheadline)
-                            Text("s")
-                                .font(.system(.subheadline, design: .monospaced))
-                                .padding(.leading, 2)
-                        }
-                        .foregroundColor(.secondary)
-                        .padding(.bottom, 0.5)
-                        
-                        
-                        HStack(alignment: .bottom, spacing: 3) {
-                            Text("1")
-                                .font(.system(.body, design: .monospaced))
-                                .foregroundColor(.green)
-                                .bold()
-                            Text("K")
-                                .font(.system(.caption2, design: .monospaced))
-                                .foregroundColor(.secondary)
-                        }
-                        
-                        HStack(alignment: .center, spacing: 0) {
-                            Image(systemName: "arrow.down")
-                                .font(.caption2)
-                            Text("/")
-                                .font(.subheadline)
-                            Text("s")
-                                .font(.system(.subheadline, design: .monospaced))
-                                .padding(.leading, 2)
-                        }
-                        .foregroundColor(.secondary)
-                        
-                        Spacer()
-                    }
-                }
+                ServerIOStatusItem(
+                    topValue: viewModel.reads,
+                    topString: "Read",
+                    bottomValue: viewModel.writes,
+                    bottomString: "Write"
+                )
+                .frame(height: 100)
             }
             .padding(.horizontal, 9)
         }
@@ -382,99 +287,49 @@ extension ServerStatusRingMetricItem {
     }
 }
 
+struct ServerStatusRingMetricItem_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            LazyVStack {
+                ServerStatusRingMetricItem(viewModel: .init())
+                    .preferredColorScheme(.light)
+                    .padding()
+            }
+            
+            LazyVStack {
+                ServerStatusRingMetricItem(viewModel: .init())
+                    .preferredColorScheme(.dark)
+                    .padding()
+            }
+        }
+    }
+}
+
 extension ServerStatusRingMetricItem {
-    class ViewModel: ObservableObject {
+    class ViewModel: ServerStats, ObservableObject {
         
-        var name: String = ""
-        
-        var temperature: CGFloat = 0
-        
-        var fahrenheit: Int {
-            let celsius = self.celsius
-            if celsius == 0 {
-                return 0
-            } else {
-                return celsius * 9 / 5 + 32
-            }
+        override init() {
+            super.init()
+            self.name = "Server"
         }
         
-        var celsius: Int {
-            return Int((Double(temperature) ) * 0.001)
+        convenience init(name: String) {
+            self.init()
+            self.name = name
         }
         
-        var cores: [Core] = .init()
-        
-        var totalIdleUsage: CGFloat {
-            let cores = cores
-            guard cores.count != 0 else { return -1 }
-            return cores.map { $0.idle }.reduce(0, +) / Double(cores.count)
+        convenience init(name: String, temperature: CGFloat) {
+            self.init()
+            self.name = name
+            self.temperature = temperature
         }
         
-        var load: [CGFloat] = [0.01,0.01,0.01]
-        
-        var totalMemory: CGFloat = 0.001
-        
-        var usedMemory: CGFloat = 0.001
-        
-        var cacheMemory: CGFloat = 0.001
-        
-        var memoryPercentageUsed: CGFloat {
-            guard !(totalMemory == 0.001 && usedMemory == 0.001) else { return 0.001 }
-            if totalMemory != 0 {
-                return (usedMemory / totalMemory) * 1000
-            } else {
-                return 0.001
-            }
-        }
-        
-        var totalCache: CGFloat = 0.001
-        
-        var usedCache: CGFloat = 0.001
-        
-        var swapCache: CGFloat = 0.001
-        
-        var swapPercentageUsed: CGFloat {
-            guard !(totalCache == 0.001 && usedCache == 0.001) else { return 0.001 }
-            if totalCache != 0 {
-                return (usedCache / totalCache) * 1000
-            } else {
-                return 0.001
-            }
-        }
-        
-        var networkDevices: [NetworkDevice] = .init()
-        
-        var up: Double {
-            let value = networkDevices.map { $0.up }.reduce(0, +)
-            return Double(value) / 1048576
-        }
-        
-        var down: Double {
-            let value = networkDevices.map { $0.down }.reduce(0, +)
-            return Double(value) / 1048576
-        }
-        
-        var deviceIOs: [IODevice] = .init()
-        
-        var reads: Double {
-            let value = deviceIOs.map { $0.read }.reduce(0, +)
-            return Double(value) / 2048.0
-        }
-        
-        var writes: Double {
-            let value = deviceIOs.map { $0.write }.reduce(0, +)
-            return Double(value) / 2048.0
-        }
-        
-        var cpuPercentUsage: CGFloat {
-            return 100 - totalIdleUsage
-        }
-        
-        init(
+        convenience init(
             name: String,
             temperature: CGFloat,
             load: [CGFloat],
             cores: [Core],
+            tasks: Tasks,
             totalMemory: CGFloat,
             usedMemory: CGFloat,
             totalCache: CGFloat,
@@ -482,10 +337,12 @@ extension ServerStatusRingMetricItem {
             networkDevices: [NetworkDevice],
             deviceIOs: [IODevice]
         ) {
+            self.init()
             self.name = name
             self.temperature = temperature
             self.load = load
             self.cores = cores
+            self.tasks = tasks
             self.totalMemory = totalMemory
             self.usedMemory = usedMemory
             self.totalCache = totalCache
